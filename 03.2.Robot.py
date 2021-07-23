@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -24,11 +24,17 @@
 # It introduces shared instancing of nodes to create two legs
 # using two instances of the same subgraph.
 #
+####################################################################
+#         Modified to be compatible with  FreeCAD                  #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-import sys
+import os,sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
-from pivy.coin import *
-from pivy.sogui import *
 
 def makeRobot():
 ##############################################################
@@ -36,63 +42,63 @@ def makeRobot():
     # Robot with legs
 
     # Construct parts for legs (thigh, calf and foot)
-    thigh = SoCube()
+    thigh = coin.SoCube()
     thigh.width = 1.2
     thigh.height = 2.2
     thigh.depth = 1.1
     
-    calfTransform = SoTransform()
+    calfTransform = coin.SoTransform()
     calfTransform.translation.setValue(0, -2.25, 0.0)
     
-    calf = SoCube()
+    calf = coin.SoCube()
     calf.width, calf.height, calf.depth = 1, 2.2, 1
 
-    footTransform = SoTransform()
+    footTransform = coin.SoTransform()
     footTransform.translation = (0, -1.5, .5)
 
-    foot = SoCube()
+    foot = coin.SoCube()
     foot.width, foot.height, foot.depth = 0.8, 0.8, 2
 
     # Put leg parts together
-    leg = SoGroup()
+    leg = coin.SoGroup()
     leg.addChild(thigh)
     leg.addChild(calfTransform)
     leg.addChild(calf)
     leg.addChild(footTransform)
     leg.addChild(foot)
     
-    leftTransform = SoTransform()
+    leftTransform = coin.SoTransform()
     leftTransform.translation = (1, -4.25, 0)
     
     # Left leg
-    leftLeg = SoSeparator()
+    leftLeg = coin.SoSeparator()
     leftLeg.addChild(leftTransform)
     leftLeg.addChild(leg)
     
-    rightTransform = SoTransform()
+    rightTransform = coin.SoTransform()
     rightTransform.translation = (-1, -4.25, 0)
     
     # Right leg
-    rightLeg = SoSeparator()
+    rightLeg = coin.SoSeparator()
     rightLeg.addChild(rightTransform)
     rightLeg.addChild(leg)
     
     # Parts for body
-    bodyTransform = SoTransform()
+    bodyTransform = coin.SoTransform()
     bodyTransform.translation = (0.0, 3.0, 0.0)
     
-    bronze = SoMaterial()
+    bronze = coin.SoMaterial()
     bronze.ambientColor = (.33, .22, .27)
     bronze.diffuseColor = (.78, .57, .11)
     bronze.specularColor = (.99, .94, .81)
     bronze.shininess = .28
     
-    bodyCylinder = SoCylinder()
+    bodyCylinder = coin.SoCylinder()
     bodyCylinder.radius = 2.5
     bodyCylinder.height = 6
     
     # Construct body out of parts 
-    body = SoSeparator()
+    body = coin.SoSeparator()
     body.addChild(bodyTransform)      
     body.addChild(bronze)
     body.addChild(bodyCylinder)
@@ -100,26 +106,26 @@ def makeRobot():
     body.addChild(rightLeg)
     
     # Head parts
-    headTransform = SoTransform()
+    headTransform = coin.SoTransform()
     headTransform.translation = (0, 7.5, 0)
     headTransform.scaleFactor = (1.5, 1.5, 1.5)
     
-    silver = SoMaterial()
+    silver = coin.SoMaterial()
     silver.ambientColor = (.2, .2, .2)
     silver.diffuseColor = (.6, .6, .6)
     silver.specularColor = (.5, .5, .5)
     silver.shininess = .5
     
-    headSphere = SoSphere()
+    headSphere = coin.SoSphere()
     
     # Construct head
-    head = SoSeparator()
+    head = coin.SoSeparator()
     head.addChild(headTransform)
     head.addChild(silver)
     head.addChild(headSphere)
     
     # Robot is just head and body
-    robot = SoSeparator()
+    robot = coin.SoSeparator()
     robot.addChild(body)               
     robot.addChild(head)
     
@@ -128,25 +134,7 @@ def makeRobot():
 
     return robot
 
-
-def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])
-    if myWindow == None: sys.exit(1)
-
-    root = SoSeparator()
-    
-    # This function contains our code fragment.
-    root.addChild(makeRobot())
-    
-    myViewer = SoGuiExaminerViewer(myWindow)
-    myViewer.setSceneGraph(root)
-    myViewer.setTitle("Robot")
-    myViewer.show()
-    myViewer.viewAll()
-
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+def ExecuteRobot():
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(makeRobot())
