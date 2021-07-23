@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -24,10 +24,16 @@
 # a pennant-shaped flag.
 #
 
-import sys
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-from pivy.coin import *
-from pivy.sogui import *
+import os,sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
 ##############################################################
 ## CODE FOR The Inventor Mentor STARTS HERE
@@ -77,30 +83,30 @@ IV_STRICT = 1
 
 # Routine to create a scene graph representing a pennant.
 def makePennant():
-    result = SoSeparator()
+    result = coin.SoSeparator()
 
     # A shape hints tells the ordering of polygons. 
     # This insures double sided lighting.
-    myHints = SoShapeHints()
-    myHints.vertexOrdering = SoShapeHints.COUNTERCLOCKWISE
+    myHints = coin.SoShapeHints()
+    myHints.vertexOrdering = coin.SoShapeHints.COUNTERCLOCKWISE
     result.addChild(myHints)
 
     if IV_STRICT:
         # This is the preferred code for Inventor 2.1 
 
-        # Using the new SoVertexProperty node is more efficient
-        myVertexProperty = SoVertexProperty()
+        # Using the new coin.SoVertexProperty node is more efficient
+        myVertexProperty = coin.SoVertexProperty()
 
         # Define colors for the strips
         for i in range(2):
-            myVertexProperty.orderedRGBA.set1Value(i, SbColor(colors[i]).getPackedValue())
-            myVertexProperty.materialBinding = SoMaterialBinding.PER_PART
+            myVertexProperty.orderedRGBA.set1Value(i, coin.SbColor(colors[i]).getPackedValue())
+            myVertexProperty.materialBinding = coin.SoMaterialBinding.PER_PART
 
         # Define coordinates for vertices
         myVertexProperty.vertex.setValues(0, 40, vertexPositions)
 
         # Define the TriangleStripSet, made of two strips.
-        myStrips = SoTriangleStripSet()
+        myStrips = coin.SoTriangleStripSet()
         myStrips.numVertices.setValues(0, 2, numVertices)
  
         myStrips.vertexProperty = myVertexProperty
@@ -108,20 +114,20 @@ def makePennant():
 
     else:
         # Define colors for the strips
-        myMaterials = SoMaterial()
+        myMaterials = coin.SoMaterial()
         myMaterials.diffuseColor.setValues(0, 2, colors)
         result.addChild(myMaterials)
-        myMaterialBinding = SoMaterialBinding()
-        myMaterialBinding.value = SoMaterialBinding.PER_PART
+        myMaterialBinding = coin.SoMaterialBinding()
+        myMaterialBinding.value = coin.SoMaterialBinding.PER_PART
         result.addChild(myMaterialBinding)
 
         # Define coordinates for vertices
-        myCoords = SoCoordinate3()
+        myCoords = coin.SoCoordinate3()
         myCoords.point.setValues(0, 40, vertexPositions)
         result.addChild(myCoords)
 
         # Define the TriangleStripSet, made of two strips.
-        myStrips = SoTriangleStripSet()
+        myStrips = coin.SoTriangleStripSet()
         myStrips.numVertices.setValues(0, 2, numVertices)
         result.addChild(myStrips)
 
@@ -130,21 +136,8 @@ def makePennant():
 ## CODE FOR The Inventor Mentor ENDS HERE
 ##############################################################
 
-def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])
-    if myWindow == None: sys.exit(1)
-
+def ExcuteTriangleStripSet():
     root = makePennant()
-
-    myViewer = SoGuiExaminerViewer(myWindow)
-    myViewer.setSceneGraph(root)
-    myViewer.setTitle("Triangle Strip Set: Pennant")
-    myViewer.show()
-    myViewer.viewAll()
-
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)

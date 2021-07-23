@@ -24,10 +24,16 @@
 # the first stellation of the dodecahedron.
 #
 
-import sys
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-from pivy.coin import *
-from pivy.sogui import *
+import os,sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
 ##############################################################
 ## CODE FOR The Inventor Mentor STARTS HERE

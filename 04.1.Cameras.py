@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -25,70 +25,53 @@
 # different views of the same scene. The cameras are 
 # switched once per second.
 #
+####################################################################
+#         Modified to be compatible with  FreeCAD                  #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-import sys
+import os,sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
-from pivy.coin import *
-from pivy.sogui import *
-
-def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])
-    if myWindow == None: sys.exit(1)
-
-    root = SoSeparator()
+def Cameras():
+    root = coin.SoSeparator()
 
     # Create a blinker node and put it in the scene. A blinker
     # switches between its children at timed intervals.
-    myBlinker = SoBlinker()
+    myBlinker = coin.SoBlinker()
     root.addChild(myBlinker)
 
     # Create three cameras. Their positions will be set later.
     # This is because the viewAll method depends on the size
     # of the render area, which has not been created yet.
-    orthoViewAll = SoOrthographicCamera()
-    perspViewAll = SoPerspectiveCamera()
-    perspOffCenter = SoPerspectiveCamera()
+    orthoViewAll = coin.SoOrthographicCamera()
+    perspViewAll = coin.SoPerspectiveCamera()
+    perspOffCenter = coin.SoPerspectiveCamera()
     myBlinker.addChild(orthoViewAll)
     myBlinker.addChild(perspViewAll)
     myBlinker.addChild(perspOffCenter)
 
     # Create a light
-    root.addChild(SoDirectionalLight())
+    root.addChild(coin.SoDirectionalLight())
 
     # Read the object from a file and add to the scene
-    myInput = SoInput()
-    if not myInput.openFile("parkbench.iv"):
+    myInput = coin.SoInput()
+    # You have to give the file path                                TODO: FIX THE PATH!!!!
+    if not myInput.openFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\parkbench.iv"):
         sys.exit(1)
 
-    fileContents = SoDB.readAll(myInput)
+    fileContents = coin.SoDB.readAll(myInput)
     if fileContents == None:
         sys.exit(1)
 
-    myMaterial = SoMaterial()
+    myMaterial = coin.SoMaterial()
     myMaterial.diffuseColor = (0.8, 0.23, 0.03) 
     root.addChild(myMaterial)
     root.addChild(fileContents)
 
-    myRenderArea = SoGuiRenderArea(myWindow)
-
-    # Establish camera positions. 
-    # First do a viewAll on all three cameras.  
-    # Then modify the position of the off-center camera.
-    myRegion = SbViewportRegion(myRenderArea.getSize())
-    orthoViewAll.viewAll(root, myRegion)
-    perspViewAll.viewAll(root, myRegion)
-    perspOffCenter.viewAll(root, myRegion)
-    initialPos = perspOffCenter.position.getValue()
-    x,y,z = initialPos.getValue()
-    perspOffCenter.position = (x+x/2., y+y/2., z+z/4.)
-
-    myRenderArea.setSceneGraph(root)
-    myRenderArea.setTitle("Cameras")
-    myRenderArea.show()
-
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)

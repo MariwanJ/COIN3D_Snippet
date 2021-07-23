@@ -23,7 +23,7 @@
 # This example builds an obelisk using the Face Set node.
 #
 ####################################################################
-#              Modified to be compatible with  FreeCAD             #
+#        Modified to be compatible with  FreeCAD                   #
 #                                                                  #
 # Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
 ####################################################################
