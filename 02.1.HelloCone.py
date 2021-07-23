@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -23,42 +23,31 @@
 # Hello Cone example program; draws a red cone in a window.
 #
 
-import sys
+####################################################################
+#         Modified to be compatible with  FreeCAD                  #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-from pivy.sogui import *
-from pivy.coin import *
+import os,sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
-def main():
+def HelloWrold():
+    #Create Cone
     # Initialize Inventor. This returns a main window to use.
     # If unsuccessful, exit.
-
-    myWindow = SoGui.init(sys.argv[0])
-    if myWindow == None: sys.exit(1)
-
     # Make a scene containing a red cone
-    root = SoSeparator()
-    myCamera = SoPerspectiveCamera()
-    myMaterial = SoMaterial()
-    root.addChild(myCamera)
-    root.addChild(SoDirectionalLight())
+    root = coin.SoSeparator()
+    myMaterial = coin.SoMaterial()
+    root.addChild(coin.SoDirectionalLight())
     myMaterial.diffuseColor = (1.0, 0.0, 0.0)   # Red
     root.addChild(myMaterial)
-    root.addChild(SoCone())
+    root.addChild(coin.SoCone())
 
-    # Create a renderArea in which to see our scene graph.
-    # The render area will appear within the main window.
-    myRenderArea = SoGuiRenderArea(myWindow)
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)
+#Create the object by running this
 
-    # Make myCamera see everything.
-    myCamera.viewAll(root, myRenderArea.getViewportRegion())
-
-    # Put our scene in myRenderArea, change the title
-    myRenderArea.setSceneGraph(root)
-    myRenderArea.setTitle("Hello Cone")
-    myRenderArea.show()
-
-    SoGui.show(myWindow)  # Display main window
-    SoGui.mainLoop()    # Main Inventor event loop
-
-if __name__ == "__main__":
-    main()
