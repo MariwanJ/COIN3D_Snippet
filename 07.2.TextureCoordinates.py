@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -24,60 +24,64 @@
 # a Face Set.
 #
 
-import sys
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-from pivy.coin import *
-from pivy.sogui import *
+import os
+import sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
 # set this variable to 0 if you want to use the other method
 IV_STRICT = 1
 
-def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])
-    if myWindow == None: sys.exit(1)
+def TextureCoord():
 
-    root = SoSeparator()
+    root = coin.SoSeparator()
     
     # Choose a texture
-    brick = SoTexture2()
+    brick = coin.SoTexture2()
     root.addChild(brick)
     brick.filename = "brick.1.rgb"
 
     if IV_STRICT:
         # This is the preferred code for Inventor 2.1 
 
-        # Using the new SoVertexProperty node is more efficient
-        myVertexProperty = SoVertexProperty()
+        # Using the new coin.SoVertexProperty node is more efficient
+        myVertexProperty = coin.SoVertexProperty()
 
         # Define the square's spatial coordinates
-        myVertexProperty.vertex.set1Value(0, SbVec3f(-3, -3, 0))
-        myVertexProperty.vertex.set1Value(1, SbVec3f( 3, -3, 0))
-        myVertexProperty.vertex.set1Value(2, SbVec3f( 3,  3, 0))
-        myVertexProperty.vertex.set1Value(3, SbVec3f(-3,  3, 0))
+        myVertexProperty.vertex.set1Value(0, coin.SbVec3f(-3, -3, 0))
+        myVertexProperty.vertex.set1Value(1, coin.SbVec3f( 3, -3, 0))
+        myVertexProperty.vertex.set1Value(2, coin.SbVec3f( 3,  3, 0))
+        myVertexProperty.vertex.set1Value(3, coin.SbVec3f(-3,  3, 0))
 
         # Define the square's normal
-        myVertexProperty.normal.set1Value(0, SbVec3f(0, 0, 1))
+        myVertexProperty.normal.set1Value(0, coin.SbVec3f(0, 0, 1))
 
         # Define the square's texture coordinates
-        myVertexProperty.texCoord.set1Value(0, SbVec2f(0, 0))
-        myVertexProperty.texCoord.set1Value(1, SbVec2f(1, 0))
-        myVertexProperty.texCoord.set1Value(2, SbVec2f(1, 1))
-        myVertexProperty.texCoord.set1Value(3, SbVec2f(0, 1))
+        myVertexProperty.texCoord.set1Value(0, coin.SbVec2f(0, 0))
+        myVertexProperty.texCoord.set1Value(1, coin.SbVec2f(1, 0))
+        myVertexProperty.texCoord.set1Value(2, coin.SbVec2f(1, 1))
+        myVertexProperty.texCoord.set1Value(3, coin.SbVec2f(0, 1))
 
-        # SoTextureCoordinateBinding node is now obsolete--in Inventor 2.1,
+        # coin.SoTextureCoordinateBinding node is now obcoin.Solete--in Inventor 2.1,
         # texture coordinates will always be generated if none are 
         # provided.
         #
-        # tBind = SoTextureCoordinateBinding()
+        # tBind = coin.SoTextureCoordinateBinding()
         # root.addChild(tBind)
-        # tBind.value(SoTextureCoordinateBinding.PER_VERTEX)
+        # tBind.value(coin.SoTextureCoordinateBinding.PER_VERTEX)
         #
         # Define normal binding
-        myVertexProperty.normalBinding = SoNormalBinding.OVERALL
+        myVertexProperty.normalBinding = coin.SoNormalBinding.OVERALL
 
         # Define a FaceSet
-        myFaceSet = SoFaceSet()
+        myFaceSet = coin.SoFaceSet()
         root.addChild(myFaceSet)
         myFaceSet.numVertices.set1Value(0, 4)
 
@@ -85,57 +89,44 @@ def main():
 
     else:
         # Define the square's spatial coordinates
-        coord = SoCoordinate3()
+        coord = coin.SoCoordinate3()
         root.addChild(coord)
-        coord.point.set1Value(0, SbVec3f(-3, -3, 0))
-        coord.point.set1Value(1, SbVec3f( 3, -3, 0))
-        coord.point.set1Value(2, SbVec3f( 3,  3, 0))
-        coord.point.set1Value(3, SbVec3f(-3,  3, 0))
+        coord.point.set1Value(0, coin.SbVec3f(-3, -3, 0))
+        coord.point.set1Value(1, coin.SbVec3f( 3, -3, 0))
+        coord.point.set1Value(2, coin.SbVec3f( 3,  3, 0))
+        coord.point.set1Value(3, coin.SbVec3f(-3,  3, 0))
 
         # Define the square's normal
-        normal = SoNormal()
+        normal = coin.SoNormal()
         root.addChild(normal)
-        normal.vector.set1Value(0, SbVec3f(0, 0, 1))
+        normal.vector.set1Value(0, coin.SbVec3f(0, 0, 1))
 
         # Define the square's texture coordinates
-        texCoord = SoTextureCoordinate2()
+        texCoord = coin.SoTextureCoordinate2()
         root.addChild(texCoord)
-        texCoord.point.set1Value(0, SbVec2f(0, 0))
-        texCoord.point.set1Value(1, SbVec2f(1, 0))
-        texCoord.point.set1Value(2, SbVec2f(1, 1))
-        texCoord.point.set1Value(3, SbVec2f(0, 1))
+        texCoord.point.set1Value(0, coin.SbVec2f(0, 0))
+        texCoord.point.set1Value(1, coin.SbVec2f(1, 0))
+        texCoord.point.set1Value(2, coin.SbVec2f(1, 1))
+        texCoord.point.set1Value(3, coin.SbVec2f(0, 1))
 
         # Define normal binding
-        nBind = SoNormalBinding()
+        nBind = coin.SoNormalBinding()
         root.addChild(nBind)
-        nBind.value = SoNormalBinding.OVERALL
+        nBind.value = coin.SoNormalBinding.OVERALL
 
-        # SoTextureCoordinateBinding node is now obsolete--in Inventor 2.1,
+        # coin.SoTextureCoordinateBinding node is now obcoin.Solete--in Inventor 2.1,
         # texture coordinates will always be generated if none are 
         # provided.
         #
-        # tBind = SoTextureCoordinateBinding()
+        # tBind = coin.SoTextureCoordinateBinding()
         # root.addChild(tBind)
-        # tBind.value.setValue(SoTextureCoordinateBinding.PER_VERTEX)
+        # tBind.value.setValue(coin.SoTextureCoordinateBinding.PER_VERTEX)
         #
 
         # Define a FaceSet
-        myFaceSet = SoFaceSet()
+        myFaceSet = coin.SoFaceSet()
         root.addChild(myFaceSet)
         myFaceSet.numVertices.set1Value(0, 4)
-
-    myViewer = SoGuiExaminerViewer(myWindow)
-    myViewer.setSceneGraph(root)
-    myViewer.setTitle("Texture Coordinates")
-
-    # In Inventor 2.1, if the machine does not have hardware texture
-    # mapping, we must override the default drawStyle to display textures.
-    # myViewer.setDrawStyle(SoGuiViewer.STILL, SoGuiViewer.VIEW_AS_IS)
-
-    myViewer.show()
-
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)
