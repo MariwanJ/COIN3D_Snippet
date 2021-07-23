@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -24,40 +24,44 @@
 # continents Africa and Asia.
 #
 
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
+
+import os
 import sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
-from pivy.coin import *
-from pivy.sogui import *
+def Text():
 
-def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])
-    if myWindow == None: sys.exit(1)
-
-    root = SoGroup()
+    root = coin.SoGroup()
 
     # Choose a font
-    myFont = SoFont()
+    myFont = coin.SoFont()
     myFont.name = "Times-Roman"
     myFont.size = 24.0
     root.addChild(myFont)
 
     # Add the globe, a sphere with a texture map.
     # Put it within a separator.
-    sphereSep = SoSeparator()
-    myTexture2 = SoTexture2()
-    sphereComplexity = SoComplexity()
+    sphereSep = coin.SoSeparator()
+    myTexture2 = coin.SoTexture2()
+    sphereComplexity = coin.SoComplexity()
     sphereComplexity.value = 0.55
     root.addChild(sphereSep)
     sphereSep.addChild(myTexture2)
     sphereSep.addChild(sphereComplexity)
-    sphereSep.addChild(SoSphere())
+    sphereSep.addChild(coin.SoSphere())
     myTexture2.filename = "globe.rgb"
 
     # Add Text2 for AFRICA, translated to proper location.
-    africaSep = SoSeparator()
-    africaTranslate = SoTranslation()
-    africaText = SoText2()
+    africaSep = coin.SoSeparator()
+    africaTranslate = coin.SoTranslation()
+    africaText = coin.SoText2()
     africaTranslate.translation = (.25,.0,1.25)
     africaText.string = "AFRICA"
     root.addChild(africaSep)
@@ -65,28 +69,14 @@ def main():
     africaSep.addChild(africaText)
 
     # Add Text2 for ASIA, translated to proper location.
-    asiaSep = SoSeparator()
-    asiaTranslate = SoTranslation()
-    asiaText = SoText2()
+    asiaSep = coin.SoSeparator()
+    asiaTranslate = coin.SoTranslation()
+    asiaText = coin.SoText2()
     asiaTranslate.translation = (.8,.8,0)
     asiaText.string = "ASIA"
     root.addChild(asiaSep)
     asiaSep.addChild(asiaTranslate)
     asiaSep.addChild(asiaText)
-
-    myViewer = SoGuiExaminerViewer(myWindow)
-    myViewer.setSceneGraph(root)
-    myViewer.setTitle("2D Text")
-
-    # In Inventor 2.1, if the machine does not have hardware texture
-    # mapping, we must override the default drawStyle to display textures.
-    myViewer.setDrawStyle(SoGuiViewer.STILL, SoGuiViewer.VIEW_AS_IS)
-
-    myViewer.show()
-    myViewer.viewAll()
-
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)
