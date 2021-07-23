@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -26,25 +26,31 @@
 # vector of length 17.  The end knots have multiplicity
 # 4 to illustrate the curve passing through the endpoints.
 #
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
+import os
 import sys
-
-from pivy.coin import *
-from pivy.sogui import *
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
 floorData = """#Inventor V2.0 ascii
 Separator {
    SpotLight {
       cutOffAngle 0.9
-      dropOffRate 0.2 
-      location 6 12 2 
+      dropOffRate 0.2
+      location 6 12 2
       direction 0 -1 0
    }
    ShapeHints {
       faceType UNKNOWN_FACE_TYPE
    }
    Texture2Transform {
-      #rotation 1.57
+      # rotation 1.57
       scaleFactor 8 8
    }
    Texture2 {
@@ -107,37 +113,39 @@ Separator {
 
 # The control points for this curve
 pts = (
-   ( 6.0,  0.0,  6.0),
+   (6.0,  0.0,  6.0),
    (-5.5,  0.5,  5.5),
    (-5.0,  1.0, -5.0),
-   ( 4.5,  1.5, -4.5),
-   ( 4.0,  2.0,  4.0),
+   (4.5,  1.5, -4.5),
+   (4.0,  2.0,  4.0),
    (-3.5,  2.5,  3.5),
    (-3.0,  3.0, -3.0),
-   ( 2.5,  3.5, -2.5),
-   ( 2.0,  4.0,  2.0),
+   (2.5,  3.5, -2.5),
+   (2.0,  4.0,  2.0),
    (-1.5,  4.5,  1.5),
    (-1.0,  5.0, -1.0),
-   ( 0.5,  5.5, -0.5),
-   ( 0.0,  6.0,  0.0))
+   (0.5,  5.5, -0.5),
+   (0.0,  6.0,  0.0))
 
 # The knot vector
 knots = (0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10)
 
 # Create the nodes needed for the B-Spline curve.
+
+
 def makeCurve():
-    curveSep = SoSeparator()
+    curveSep = coin.SoSeparator()
 
     # Set the draw style of the curve.
-    drawStyle = SoDrawStyle()
+    drawStyle = coin.SoDrawStyle()
     drawStyle.lineWidth = 4
     curveSep.addChild(drawStyle)
 
     # Define the NURBS curve including the control points
     # and a complexity.
-    complexity = SoComplexity()
-    controlPts = SoCoordinate3()
-    curve      = SoNurbsCurve()
+    complexity = coin.SoComplexity()
+    controlPts = coin.SoCoordinate3()
+    curve = coin.SoNurbsCurve()
     complexity.value = 0.8
     controlPts.point.setValues(0, 13, pts)
     curve.numControlPoints = 13
@@ -152,77 +160,62 @@ def makeCurve():
 ##############################################################
 
 
-def main():
-    # Initialize Inventor and Qt
-    appWindow = SoGui.init(sys.argv[0])
-    if appWindow == None:
-        sys.exit(1)
+def UniCurveExec():
 
-    root  = SoSeparator()
+   root = coin.SoSeparator()
+   # Create the scene graph for the spiral
+   spiral = coin.SoSeparator()
+   curveSep = makeCurve()
+   lmodel = coin.SoLightModel()
+   clr = coin.SoBaseColor()
+   lmodel.model = coin.SoLightModel.BASE_COLOR
+   clr.rgb = (1.0, 0.0, 0.1)
+   spiral.addChild(lmodel)
+   spiral.addChild(clr)
+   spiral.addChild(curveSep)
+   root.addChild(spiral)
 
-    # Create the scene graph for the spiral
-    spiral   = SoSeparator()
-    curveSep = makeCurve()
-    lmodel   = SoLightModel()
-    clr      = SoBaseColor()
+   # Create the scene graph for the floor
+   floor = coin.SoSeparator()
+   xlate = coin.SoTranslation()
+   rot = coin.SoRotation()
+   scale = coin.SoScale()
+   input = coin.SoInput()
 
-    lmodel.model = SoLightModel.BASE_COLOR
-    clr.rgb = (1.0, 0.0, 0.1)
-    spiral.addChild(lmodel)
-    spiral.addChild(clr)
-    spiral.addChild(curveSep)
-    root.addChild(spiral)
+   input.setBuffer(floorData)
+   result = coin.SoDB.readAll(input)
+   xlate.translation = (-12.0, -5.0, -5.0)
+   scale.scaleFactor = (2.0, 1.0, 2.0)
+   rot.rotation.setValue(coin.SbRotation(
+   coin.SbVec3f(0.0, 1.0, 0.0), 22/7/2.0))
+   floor.addChild(rot)
+   floor.addChild(xlate)
+   floor.addChild(scale)
+   floor.addChild(result)
+   root.addChild(floor)
 
-    # Create the scene graph for the floor
-    floor = SoSeparator()
-    xlate = SoTranslation()
-    rot   = SoRotation()
-    scale = SoScale()
-    input = SoInput()
+   # Create the scene graph for the spiral's shadow
+   shadow = coin.SoSeparator()
+   shmdl = coin.SoLightModel()
+   shmtl = coin.SoMaterial()
+   shclr = coin.SoBaseColor()
+   shxl = coin.SoTranslation()
+   shscl = coin.SoScale()
 
-    input.setBuffer(floorData)
-    result = SoDB.readAll(input)
-    xlate.translation = (-12.0, -5.0, -5.0)
-    scale.scaleFactor = (2.0, 1.0, 2.0)
-    rot.rotation.setValue(SbRotation(SbVec3f(0.0, 1.0, 0.0), M_PI/2.0))
-    floor.addChild(rot)
-    floor.addChild(xlate)
-    floor.addChild(scale)
-    floor.addChild(result)
-    root.addChild(floor)
+   shmdl.model = coin.SoLightModel.BASE_COLOR
+   shclr.rgb = (0.21, 0.15, 0.09)
+   shmtl.transparency = 0.5
+   shxl.translation = (0.0, -4.9, 0.0)
+   shscl.scaleFactor = (1.0, 0.0, 1.0)
+   shadow.addChild(shmtl)
+   shadow.addChild(shmdl)
+   shadow.addChild(shclr)
+   shadow.addChild(shxl)
+   shadow.addChild(shscl)
+   shadow.addChild(curveSep)
+   root.addChild(shadow)
 
-    # Create the scene graph for the spiral's shadow
-    shadow = SoSeparator()
-    shmdl  = SoLightModel()
-    shmtl  = SoMaterial()
-    shclr  = SoBaseColor()
-    shxl   = SoTranslation()
-    shscl  = SoScale()
-   
-    shmdl.model = SoLightModel.BASE_COLOR
-    shclr.rgb = (0.21, 0.15, 0.09)
-    shmtl.transparency = 0.5
-    shxl.translation = (0.0, -4.9, 0.0)
-    shscl.scaleFactor = (1.0, 0.0, 1.0)
-    shadow.addChild(shmtl)
-    shadow.addChild(shmdl)
-    shadow.addChild(shclr)
-    shadow.addChild(shxl)
-    shadow.addChild(shscl)
-    shadow.addChild(curveSep)
-    root.addChild(shadow)
+   view = Gui.ActiveDocument.ActiveView
+   sg = view.getSceneGraph()
+   sg.addChild(root)
 
-    # Initialize an Examiner Viewer
-    viewer = SoGuiExaminerViewer(appWindow)
-    viewer.setSceneGraph(root)
-    viewer.setTitle("B-Spline Curve")
-    cam = viewer.getCamera()
-    cam.position = (-6.0, 8.0, 20.0)
-    cam.pointAt(SbVec3f(0.0, -2.0, -4.0))
-    viewer.show()
-
-    SoGui.show(appWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()

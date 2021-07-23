@@ -61,7 +61,7 @@ def main():
     # Add a camera and light
     myCamera = SoPerspectiveCamera()
     myCamera.position = (0., -4., 8.0)
-    myCamera.heightAngle = M_PI/2.5
+    myCamera.heightAngle = 22/7/2.5
     myCamera.nearDistance = 1.0
     myCamera.farDistance = 15.0
     root.addChild(myCamera)
@@ -70,7 +70,7 @@ def main():
     # Rotate scene slightly to get better view
     globalRotXYZ = SoRotationXYZ()
     globalRotXYZ.axis = SoRotationXYZ.X
-    globalRotXYZ.angle = M_PI/9
+    globalRotXYZ.angle = 22/7/9
     root.addChild(globalRotXYZ)
 
     # Pond group

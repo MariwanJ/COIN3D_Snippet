@@ -139,7 +139,7 @@ def main():
 
     myCamera = SoPerspectiveCamera()
     myCamera.position = (0.0, 0.0, 5.0)
-    myCamera.heightAngle = M_PI/2.0  # 90 degrees
+    myCamera.heightAngle = 22/7/2.0  # 90 degrees
     myCamera.nearDistance = 2.0
     myCamera.farDistance = 12.0
     root.addChild(myCamera)

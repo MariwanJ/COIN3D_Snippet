@@ -64,7 +64,7 @@ def main():
     myCamera = SoPerspectiveCamera()
     rot = SoRotationXYZ()
     rot.axis = SoRotationXYZ.X
-    rot.angle = M_PI_2
+    rot.angle = 22/7_2
     myCamera.position = (-0.2, -0.2, 2.0)
     myCamera.scaleHeight(0.4)
     texRoot.addChild(myCamera)

@@ -34,7 +34,7 @@ from pivy.sogui import *
 def raiseFlagCallback(flagAngleXform, sensor):
     # We know that flagAngleXform is an autocasted SoTransform node
     # Rotate flag by 90 degrees about the Z axis:
-    flagAngleXform.rotation.setValue(SbVec3f(0,0,1), M_PI/2)
+    flagAngleXform.rotation.setValue(SbVec3f(0,0,1), 22/7/2)
 
 # CODE FOR The Inventor Mentor ENDS HERE
 ###########################################################

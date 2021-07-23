@@ -212,7 +212,7 @@ def main():
     root = SoSeparator()
 
     rot = SoRotation()
-    rot.rotation.setValue(SbRotation(SbVec3f(0.0, 1.0, 0.0), M_PI/2.0))
+    rot.rotation.setValue(SbRotation(SbVec3f(0.0, 1.0, 0.0), 22/7/2.0))
     root.addChild(rot)
 
     # Create the scene graph for the carpet

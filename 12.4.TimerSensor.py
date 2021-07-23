@@ -43,7 +43,7 @@ from pivy.sogui import *
 def rotatingSensorCallback(myRotation, sensor):
     # Rotate an object...
     currentRotation = myRotation.rotation.getValue()
-    currentRotation *= SbRotation(SbVec3f(0,0,1), M_PI/90.0)
+    currentRotation *= SbRotation(SbVec3f(0,0,1), 22/7/90.0)
     myRotation.rotation.setValue(currentRotation)
 
 # This function is called once every 5 seconds, and

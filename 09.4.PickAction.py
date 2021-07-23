@@ -93,7 +93,7 @@ def main():
     # Add two copies of the star object, one white and one red
     myRotation = SoRotationXYZ()
     myRotation.axis = SoRotationXYZ.X
-    myRotation.angle = M_PI/2.2  # almost 90 degrees
+    myRotation.angle = 22/7/2.2  # almost 90 degrees
     root.addChild(myRotation)
 
     root.addChild(starObject)  # first star object

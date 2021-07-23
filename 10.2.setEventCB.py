@@ -46,7 +46,7 @@ from PySide2.QtGui import *
 # Rotate 90 degrees every second, update 30 times a second
 myTicker = None
 UPDATE_RATE    = 1.0/30.0
-ROTATION_ANGLE = M_PI/60.0
+ROTATION_ANGLE = 22/7/60.0
 
 def myProjectPoint(myRenderArea, mousex, mousey, use_coin=False):
     # Take the x,y position of mouse, and normalize to [0,1].
@@ -238,7 +238,7 @@ def main():
     myCamera.position = (0, 0, 4)
     myCamera.nearDistance = 1.0
     myCamera.farDistance = 7.0
-    myCamera.heightAngle = M_PI/3.0
+    myCamera.heightAngle = 22/7/3.0
    
     # Add a coordinate and point set
     myCoord = SoCoordinate3()

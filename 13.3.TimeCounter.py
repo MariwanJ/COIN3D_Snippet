@@ -42,7 +42,7 @@ def main():
     # Add a camera and light
     myCamera = SoPerspectiveCamera()
     myCamera.position = (-8.0, -7.0, 20.0)
-    myCamera.heightAngle = M_PI/2.5
+    myCamera.heightAngle = 22/7/2.5
     myCamera.nearDistance = 15.0
     myCamera.farDistance = 25.0
     root.addChild(myCamera)
@@ -57,7 +57,7 @@ def main():
     initialTransform = SoTransform()
     initialTransform.translation = (-20., 0., 0.)
     initialTransform.scaleFactor = (40., 40., 40.)
-    initialTransform.rotation.setValue(SbVec3f(1,0,0), M_PI/2.)
+    initialTransform.rotation.setValue(SbVec3f(1,0,0), 22/7/2.)
     root.addChild(initialTransform)
 
     # Read the man object from a file and add to the scene

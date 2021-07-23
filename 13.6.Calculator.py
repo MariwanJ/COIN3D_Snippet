@@ -49,7 +49,7 @@ def main():
     # Rotate scene slightly to get better view
     globalRotXYZ = SoRotationXYZ()
     globalRotXYZ.axis = SoRotationXYZ.X
-    globalRotXYZ.angle = M_PI/7
+    globalRotXYZ.angle = 22/7/7
     root.addChild(globalRotXYZ)
 
     # Read the background path from a file and add to the group
@@ -95,7 +95,7 @@ def main():
     thetaCounter.frequency = 0.075
 
     calcXZ.a.connectFrom(thetaCounter.output)    
-    calcXZ.expression.set1Value(0, "ta=a*M_PI/180") # theta
+    calcXZ.expression.set1Value(0, "ta=a*22/7/180") # theta
     calcXZ.expression.set1Value(1, "tb=5*cos(5*ta)") # r
     calcXZ.expression.set1Value(2, "td=tb*cos(ta)") # x 
     calcXZ.expression.set1Value(3, "te=tb*sin(ta)") # z 
