@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -27,9 +27,18 @@
 #
 
 from __future__ import print_function
-import sys
 
-from pivy.coin import *
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
+
+import os
+import sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
 ##############################################################
 # CODE FOR The Inventor Mentor STARTS HERE
@@ -48,7 +57,7 @@ def printHeaderCallback(void, callbackAction, node):
         print('named "%s" ' % node.getName().getString())
     print("at address %r\n" % node.this)
 
-    return SoCallbackAction.CONTINUE
+    return coin.SoCallbackAction.CONTINUE
 
 def printTriangleCallback(void, callbackAction, vertex1, vertex2, vertex3):
     print("Triangle:")
@@ -57,34 +66,28 @@ def printTriangleCallback(void, callbackAction, vertex1, vertex2, vertex3):
     printVertex(vertex3)
 
 def printSpheres(root):
-    myAction = SoCallbackAction()
+    myAction = coin.SoCallbackAction()
     
-    myAction.addPreCallback(SoSphere.getClassTypeId(), printHeaderCallback, None)
-    myAction.addTriangleCallback(SoSphere.getClassTypeId(), printTriangleCallback, None)
+    myAction.addPreCallback(coin.SoSphere.getClassTypeId(), printHeaderCallback, None)
+    myAction.addTriangleCallback(coin.SoSphere.getClassTypeId(), printTriangleCallback, None)
 
     myAction.apply(root)
     
 # CODE FOR The Inventor Mentor ENDS HERE
 ##############################################################
 
-def main():
+def ExecuteGenSph():
     # Initialize Inventor
-    # SoDB.init() invoked automatically upon coin module import
+    # coin.SoDB.init() invoked automatically upon coin module import
 
     # Make a scene containing a red sphere
-    root = SoSeparator()
-    myCamera = SoPerspectiveCamera()
-    myMaterial = SoMaterial()
+    root = coin.SoSeparator()
+    myCamera = coin.SoPerspectiveCamera()
+    myMaterial = coin.SoMaterial()
     root.addChild(myCamera)
-    root.addChild(SoDirectionalLight())
+    root.addChild(coin.SoDirectionalLight())
     myMaterial.diffuseColor = (1.0, 0.0, 0.0)   # Red
     root.addChild(myMaterial)
-    root.addChild(SoSphere())
-
+    root.addChild(coin.SoSphere())
     # Write out the triangles that form the sphere in the scene
     printSpheres(root)
-
-    return 0
-
-if __name__ == "__main__":
-    sys.exit(main())

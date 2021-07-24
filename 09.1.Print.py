@@ -47,7 +47,7 @@ class callbackData:
 ##############################################################
 ## CODE FOR The Inventor Mentor STARTS HERE
 
-#Warning: This file might not works as it should. But I put the idea here. Mariwan
+#Warning: This file might not works as it should. But I put the idea here. Mariwan TODO: FIXME:
 
 
 def printToPostScript(root, file, viewer, printerDPI):
