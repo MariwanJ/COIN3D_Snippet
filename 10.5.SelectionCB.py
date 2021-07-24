@@ -25,11 +25,20 @@
 # When an object is selected, a selection callback is called
 # to change the material color of that object.
 #
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
+import os
 import sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
-from pivy.coin import *
-from pivy.sogui import *
+#Warning: Didn't work for me .: TODO: FIXME:
+
 
 # global data
 textMaterial, sphereMaterial = [None]*2
@@ -40,82 +49,68 @@ white   = (0.8, 0.8, 0.8)  # Color when not selected
 # We determine which object was selected, and change 
 # that objects material color.
 def mySelectionCB(void, selectionPath):
-    if selectionPath.getTail().isOfType(SoText3.getClassTypeId()):
+    if selectionPath.getTail().isOfType(coin.SoText3.getClassTypeId()):
         textMaterial.diffuseColor.setValue(reddish)
-    elif selectionPath.getTail().isOfType(SoSphere.getClassTypeId()):
+    elif selectionPath.getTail().isOfType(coin.SoSphere.getClassTypeId()):
         sphereMaterial.diffuseColor.setValue(reddish)
 
 # This routine is called whenever an object gets deselected. 
 # We determine which object was deselected, and reset 
 # that objects material color.
 def myDeselectionCB(void, deselectionPath):
-    if deselectionPath.getTail().isOfType(SoText3.getClassTypeId()):
+    if deselectionPath.getTail().isOfType(coin.SoText3.getClassTypeId()):
         textMaterial.diffuseColor = white
-    elif deselectionPath.getTail().isOfType(SoSphere.getClassTypeId()):
+    elif deselectionPath.getTail().isOfType(coin.SoSphere.getClassTypeId()):
         sphereMaterial.diffuseColor = white
 
-def main():
+def SelectionCBExec():
     global textMaterial, sphereMaterial
-    
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])
-    if myWindow == None: sys.exit(1)
 
     # Create and set up the selection node
-    selectionRoot = SoSelection()
-    selectionRoot.policy = SoSelection.SINGLE
+    selectionRoot = coin.SoSelection()
+    selectionRoot.policy = coin.SoSelection.SINGLE
     selectionRoot.addSelectionCallback(mySelectionCB)
     selectionRoot.addDeselectionCallback(myDeselectionCB)
 
     # Create the scene graph
-    root = SoSeparator()
+    root = coin.SoSeparator()
     selectionRoot.addChild(root)
 
-    myCamera = SoPerspectiveCamera()
+    myCamera = coin.SoPerspectiveCamera()
     root.addChild(myCamera)
-    root.addChild(SoDirectionalLight())
+    root.addChild(coin.SoDirectionalLight())
 
     # Add a sphere node
-    sphereRoot = SoSeparator()
-    sphereTransform = SoTransform()
+    sphereRoot = coin.SoSeparator()
+    sphereTransform = coin.SoTransform()
     sphereTransform.translation = (17., 17., 0.)
     sphereTransform.scaleFactor = (8., 8., 8.)
     sphereRoot.addChild(sphereTransform)
 
-    sphereMaterial = SoMaterial()
+    sphereMaterial = coin.SoMaterial()
     sphereMaterial.diffuseColor = (.8, .8, .8)
     sphereRoot.addChild(sphereMaterial)
-    sphereRoot.addChild(SoSphere())
+    sphereRoot.addChild(coin.SoSphere())
     root.addChild(sphereRoot)
 
     # Add a text node
-    textRoot = SoSeparator()
-    textTransform = SoTransform()
+    textRoot = coin.SoSeparator()
+    textTransform = coin.SoTransform()
     textTransform.translation = (0., -1., 0.)
     textRoot.addChild(textTransform)
 
-    textMaterial = SoMaterial()
+    textMaterial = coin.SoMaterial()
     textMaterial.diffuseColor = (.8, .8, .8)
     textRoot.addChild(textMaterial)
-    textPickStyle = SoPickStyle()
-    textPickStyle.style = SoPickStyle.BOUNDING_BOX
+    textPickStyle = coin.SoPickStyle()
+    textPickStyle.style = coin.SoPickStyle.BOUNDING_BOX
     textRoot.addChild(textPickStyle)
-    myText = SoText3()
+    myText = coin.SoText3()
     myText.string = "rhubarb"
     textRoot.addChild(myText)
     root.addChild(textRoot)
 
-    myRenderArea = SoGuiRenderArea(myWindow)
-    myRenderArea.setSceneGraph(selectionRoot)
-    myRenderArea.setTitle("My Selection Callback")
-    myRenderArea.show()
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)
 
-    # Make the camera see the whole scene
-    myViewport = myRenderArea.getViewportRegion()
-    myCamera.viewAll(root, myViewport, 2.0)
-
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()

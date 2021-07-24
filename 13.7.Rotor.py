@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -25,20 +25,27 @@
 # Use a rotor node to rotate the vanes.
 #
 
-import sys
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-from pivy.coin import *
-from pivy.sogui import *
+import os, sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+from PySide import QtGui, QtCore  # https://www.freecadweb.org/wiki/PySide
 
 def readFile(filename):
     # Open the input file
-    mySceneInput = SoInput()
+    mySceneInput = coin.SoInput()
     if not mySceneInput.openFile(filename):
         print("Cannot open file %s" % (filename), file=sys.stderr)
         return None
 
     # Read the whole file into the database
-    myGraph = SoDB.readAll(mySceneInput)
+    myGraph = coin.SoDB.readAll(mySceneInput)
     if myGraph == None:
         print("Problem reading file", file=sys.stderr)
         return None
@@ -46,40 +53,27 @@ def readFile(filename):
     mySceneInput.closeFile()
     return myGraph
 
-def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])  
-    if myWindow == None: sys.exit(1)     
+def RotorExe():
 
-    root = SoSeparator()
+    root = coin.SoSeparator()
 
     # Read in the data for the windmill tower
-    windmillTower = readFile("windmillTower.iv")
+    windmillTower = readFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\windmillTower.iv") #TODO: FIXME: change path
     root.addChild(windmillTower)
 
     # Add a rotor node to spin the vanes
-    myRotor = SoRotor()
-    myRotor.rotation.setValue(SbVec3f(0, 0, 1), 0) # z axis
+    myRotor = coin.SoRotor()
+    myRotor.rotation.setValue(coin.SbVec3f(0, 0, 1), 0) # z axis
     myRotor.speed = 0.2
     root.addChild(myRotor)
 
     # Read in the data for the windmill vanes
-    windmillVanes = readFile("windmillVanes.iv")
+    windmillVanes = readFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\windmillVanes.iv") #TODO: FIXME: change path
     root.addChild(windmillVanes)
 
-    # Create a viewer
-    myViewer = SoGuiExaminerViewer(myWindow)
-
-    # attach and show viewer
-    myViewer.setSceneGraph(root)
-    myViewer.setTitle("Windmill")
-    myViewer.show()
-
-    SoDB.setRealTimeInterval(1/120.0)
+    coin.SoDB.setRealTimeInterval(1/120.0)
     
-    # Loop forever
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)
+    

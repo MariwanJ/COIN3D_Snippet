@@ -22,11 +22,11 @@
 #
 # Manipulator attachment example.
 #
-# The scene graph has an SoWrapperKit, a cube and a sphere.
+# The scene graph has an coin.SoWrapperKit, a cube and a sphere.
 # A file containing a luxo lamp is read in as the 'contents'
-# part of the SoWrapperKit.
-# When the user picks on the SoWrapperKit (lamp), the kit's 
-# "transform" part is replaced with an SoTransformBoxManip.
+# part of the coin.SoWrapperKit.
+# When the user picks on the coin.SoWrapperKit (lamp), the kit's 
+# "transform" part is replaced with an coin.SoTransformBoxManip.
 # Alternatively, when the user picks the sphere, the
 # sphere's associated transform is replaced by an
 # SoHandleBoxManip.  Picking the cube causes an 
@@ -36,16 +36,22 @@
 # the color of the object being manipulated.
 # 
 # Note that for illustration purposes, the
-# cube and SoWrapperKit already have transform nodes 
+# cube and coin.SoWrapperKit already have transform nodes 
 # associated with them; the sphere does not. In all cases, 
 # the routine createTransformPath() is used to find the 
 # transform node that affects the picked object.
 #
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-import sys
-
-from pivy.coin import *
-from pivy.sogui import *
+import os, sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+from PySide import QtGui, QtCore  # https://www.freecadweb.org/wiki/PySide
 
 # global data
 myHandleBox      = None
@@ -57,13 +63,13 @@ transformBoxPath = None
 
 # Is this node of a type that is influenced by transforms?
 def isTransformable(myNode):
-    if (myNode.isOfType(SoGroup.getClassTypeId()) or
-        myNode.isOfType(SoShape.getClassTypeId()) or
-        myNode.isOfType(SoCamera.getClassTypeId()) or
-        myNode.isOfType(SoLight.getClassTypeId())):
-        return TRUE
+    if (myNode.isOfType(coin.SoGroup.getClassTypeId()) or
+        myNode.isOfType(coin.SoShape.getClassTypeId()) or
+        myNode.isOfType(coin.SoCamera.getClassTypeId()) or
+        myNode.isOfType(coin.SoLight.getClassTypeId())):
+        return True
     else: 
-        return FALSE
+        return False
 
 #  Create a path to the transform node that affects the tail
 #  of the input path.  Three possible cases:
@@ -92,19 +98,19 @@ def createTransformPath(inputPath):
     # The kit copies inputPath, then extends it past the 
     # kit all the way down to the transform. It creates the
     # transform if necessary.
-    if tail.isOfType(SoBaseKit.getClassTypeId()):
+    if tail.isOfType(coin.SoBaseKit.getClassTypeId()):
         kit = tail
-        return kit.createPathToPart("transform", TRUE, inputPath)
+        return kit.createPathToPart("transform", True, inputPath)
 
     editXf = None
     parent = None
-    existedBefore = FALSE
+    existedBefore = False
 
     # CASE 2: The tail is not a group.
-    isTailGroup = tail.isOfType(SoGroup.getClassTypeId())
-    if not isTailGroup:
-        # 'parent' is node above tail. Search under parent right
-        # to left for a transform. If we find a 'movable' node
+    isTailGroup = tail.isOfType(coin.SoGroup.getClassTypeId())
+    if not coin.isTailGroup:
+        # 'coin.parent' is node above tail. Search under parent right
+        # to coin.left for a transform. If we find a 'movable' node
         # insert a transform just left of tail.  
         parent = inputPath.getNode(pathLength - 2)
         tailIndx = parent.findChild(tail)
@@ -113,17 +119,17 @@ def createTransformPath(inputPath):
             if editXf != None:
                 break
             myNode = parent.getChild(i)
-            if myNode.isOfType(SoTransform.getClassTypeId()):
+            if myNode.isOfType(coin.SoTransform.getClassTypeId()):
                 editXf = myNode
             elif i != tailIndx and isTransformable(myNode):
                 break
 
         if editXf == None:
-            existedBefore = FALSE
-            editXf = SoTransform()
+            existedBefore = False
+            editXf = coin.SoTransform()
             parent.insertChild(editXf, tailIndx)
         else:
-            existedBefore = TRUE
+            existedBefore = True
 
     # CASE 3: The tail is a group.
     else:
@@ -135,17 +141,17 @@ def createTransformPath(inputPath):
             if editXf != None:
                 break
             myNode = parent.getChild(i)
-            if myNode.isOfType(SoTransform.getClassTypeId()):
+            if myNode.isOfType(coin.SoTransform.getClassTypeId()):
                 editXf = myNode
             elif isTransformable(myNode):
                 break
 
         if editXf == None:
-            existedBefore = FALSE
-            editXf = SoTransform()
+            existedBefore = False
+            editXf = coin.SoTransform()
             parent.insertChild(editXf, i)
         else:
-            existedBefore = TRUE
+            existedBefore = True
 
     # Create 'pathToXform.' Copy inputPath, then make last
     # node be editXf.
@@ -178,13 +184,13 @@ def selectionCallback(void, # user data is not used
     # Attach the handle box to the sphere,
     # the trackball to the cube
     # or the transformBox to the wrapperKit
-    if selectionPath.getTail().isOfType(SoSphere.getClassTypeId()):
+    if selectionPath.getTail().isOfType(coin.SoSphere.getClassTypeId()):
         handleBoxPath = xformPath
         myHandleBox.replaceNode(xformPath)
-    elif selectionPath.getTail().isOfType(SoCube.getClassTypeId()):
+    elif selectionPath.getTail().isOfType(coin.SoCube.getClassTypeId()):
         trackballPath = xformPath
         myTrackball.replaceNode(xformPath)
-    elif selectionPath.getTail().isOfType(SoWrapperKit.getClassTypeId()):
+    elif selectionPath.getTail().isOfType(coin.SoWrapperKit.getClassTypeId()):
         transformBoxPath = xformPath
         myTransformBox.replaceNode(xformPath)
 
@@ -197,11 +203,11 @@ def deselectionCallback(void, # user data is not used
     global myHandleBox, myTrackball, myTransformBox, handleBoxPath
     global trackballPath, transformBoxPath
     
-    if deselectionPath.getTail().isOfType(SoSphere.getClassTypeId()):
+    if deselectionPath.getTail().isOfType(coin.SoSphere.getClassTypeId()):
         myHandleBox.replaceManip(handleBoxPath,None)
-    elif deselectionPath.getTail().isOfType(SoCube.getClassTypeId()):
+    elif deselectionPath.getTail().isOfType(coin.SoCube.getClassTypeId()):
         myTrackball.replaceManip(trackballPath,None)
-    elif deselectionPath.getTail().isOfType(SoWrapperKit.getClassTypeId()):
+    elif deselectionPath.getTail().isOfType(coin.SoWrapperKit.getClassTypeId()):
         myTransformBox.replaceManip(transformBoxPath,None)
 
 # This is called when a manipulator is
@@ -216,62 +222,59 @@ def dragFinishCallback(myMaterial, # user data
                        dragger):   # callback data not used
     myMaterial.diffuseColor = (.8,.8,.8)
 
-def main():
+def AttachManipExe():
     global myHandleBox, myTrackball, myTransformBox
     
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])  
-    if myWindow == None: sys.exit(1)     
 
     # create and set up the selection node
-    selectionRoot = SoSelection()
+    selectionRoot = coin.SoSelection()
     selectionRoot.addSelectionCallback(selectionCallback, None)
     selectionRoot.addDeselectionCallback(deselectionCallback, None)
 
     # create the scene graph
-    root = SoSeparator()
+    root = coin.SoSeparator()
     selectionRoot.addChild(root)
 
-    # Read a file into contents of SoWrapperKit 
+    # Read a file into contents of coin.SoWrapperKit 
     # Translate it to the right.
-    myWrapperKit = SoWrapperKit()
+    myWrapperKit = coin.SoWrapperKit()
     root.addChild(myWrapperKit)
-    myInput = SoInput()
-    if not myInput.openFile("luxo.iv"):
+    myInput = coin.SoInput()
+    if not myInput.openFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\luxo.iv"):   #TODO: FIXME: Change the path
         sys.exit(1)
-    objectFromFile = SoDB.readAll(myInput)
+    objectFromFile = coin.SoDB.readAll(myInput)
     if objectFromFile == None:
         sys.exit(1)
     myWrapperKit.setPart("contents",objectFromFile)
     myWrapperKit.set("transform { translation 3 -1 0 }")
-    wrapperMat = myWrapperKit.getPart("material",TRUE)
+    wrapperMat = myWrapperKit.getPart("material",True)
     wrapperMat.diffuseColor = (.8, .8, .8)
 
     # Create a cube with its own transform.
-    cubeRoot  = SoSeparator()
-    cubeXform = SoTransform()
+    cubeRoot  = coin.SoSeparator()
+    cubeXform = coin.SoTransform()
     cubeXform.translation = (-4, 0, 0)
     root.addChild(cubeRoot)
     cubeRoot.addChild(cubeXform)
 
-    cubeMat = SoMaterial()
+    cubeMat = coin.SoMaterial()
     cubeMat.diffuseColor = (.8, .8, .8)
     cubeRoot.addChild(cubeMat)
-    cubeRoot.addChild(SoCube())
+    cubeRoot.addChild(coin.SoCube())
 
     # add a sphere node without a transform
     # (one will be added when we attach the manipulator)
-    sphereRoot = SoSeparator()
-    sphereMat = SoMaterial()
+    sphereRoot = coin.SoSeparator()
+    sphereMat = coin.SoMaterial()
     root.addChild(sphereRoot)
     sphereRoot.addChild(sphereMat)
-    sphereRoot.addChild(SoSphere())
+    sphereRoot.addChild(coin.SoSphere())
     sphereMat.diffuseColor = (.8, .8, .8)
 
     # create the manipulators
-    myHandleBox = SoHandleBoxManip()
-    myTrackball = SoTrackballManip()
-    myTransformBox = SoTransformBoxManip()
+    myHandleBox = coin.SoHandleBoxManip()
+    myTrackball = coin.SoTrackballManip()
+    myTransformBox = coin.SoTransformBoxManip()
 
     # Get the draggers and add callbacks to them. Note
     # that you don't put callbacks on manipulators. You put
@@ -287,15 +290,7 @@ def main():
     myDragger = myTransformBox.getDragger()
     myDragger.addStartCallback(dragStartCallback,wrapperMat)
     myDragger.addFinishCallback(dragFinishCallback,wrapperMat)
-
-    myViewer = SoGuiExaminerViewer(myWindow)
-    myViewer.setSceneGraph(selectionRoot)
-    myViewer.setTitle("Attaching Manipulators")
-    myViewer.show()
-    myViewer.viewAll()
     
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)

@@ -33,14 +33,22 @@
 #
 
 from __future__ import print_function
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
+
+import os
 import sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+from PySide import QtGui, QtCore  # https://www.freecadweb.org/wiki/PySide
 
-from pivy.coin import *
-from pivy.gui.soqt import *
 
-# PySide module has to be imported as last one if used in the same namespace
-from PySide2.QtCore import *
-from PySide2.QtGui import *
+#WARNING: MIGHT NOT WORKS : TODO: FIXME:
+
 
 # Timer sensor 
 # Rotate 90 degrees every second, update 30 times a second
@@ -69,7 +77,7 @@ def myProjectPoint(myRenderArea, mousex, mousey, use_coin=False):
     myViewVolume = myCamera.getViewVolume()
    
     # Project the mouse point to a line
-    p0, p1 = myViewVolume.projectPointToLine(SbVec2f(x,y))
+    p0, p1 = myViewVolume.projectPointToLine(coin.SbVec2f(x,y))
 
     # Midpoint of the line intersects a plane thru the origin
     intersection = (p0 + p1) * 0.5
@@ -94,11 +102,11 @@ def myClearPoints(myRenderArea):
     myPointSet.numPoints = 0
 
 def tickerCallback(myCamera, sensor):
-    mtx = SbMatrix()
+    mtx = coin.SbMatrix()
 
     # Adjust the position
     pos = myCamera.position.getValue()
-    rot = SbRotation(SbVec3f(0,1,0), ROTATION_ANGLE)
+    rot = coin.SbRotation(coin.SbVec3f(0,1,0), ROTATION_ANGLE)
     mtx.setRotate(rot)
     pos = mtx.multVecMatrix(pos)
     myCamera.position = pos
@@ -110,54 +118,54 @@ def tickerCallback(myCamera, sensor):
 # CODE FOR The Inventor Mentor STARTS HERE  (part 1)
 
 def myAppEventHandler(myRenderArea, anyevent):
-    handled = TRUE
+    handled = True
 
-    if anyevent.type() == QEvent.MouseButtonPress:
-        if anyevent.button() == QMouseEvent.LeftButton:
+    if anyevent.type() == QtGui.QEvent.MouseButtonPress:
+        if anyevent.button() == QtGui.QMouseEvent.LeftButton:
             vec = myProjectPoint(myRenderArea, anyevent.x(), anyevent.y())
             myAddPoint(myRenderArea, vec)
-        elif anyevent.button() == QMouseEvent.MidButton:
+        elif anyevent.button() == QtGui.QMouseEvent.MidButton:
             myTicker.schedule()  # start spinning the camera
-        elif anyevent.button() == QMouseEvent.RightButton:
+        elif anyevent.button() == QtGui.QMouseEvent.RightButton:
             myClearPoints(myRenderArea)  # clear the point set
 
-    elif anyevent.type() == QEvent.MouseButtonRelease:
-        if anyevent.button() == QMouseEvent.MidButton:
+    elif anyevent.type() == QtGui.QEvent.MouseButtonRelease:
+        if anyevent.button() == QtGui.QMouseEvent.MidButton:
             myTicker.unschedule()  # stop spinning the camera
 
-    elif anyevent.type() == QEvent.MouseMove:
-        if anyevent.state() == QMouseEvent.LeftButton:
+    elif anyevent.type() == QtGui.QEvent.MouseMove:
+        if anyevent.state() == QtGui.QMouseEvent.LeftButton:
             vec = myProjectPoint(myRenderArea, anyevent.x(), anyevent.y())
             myAddPoint(myRenderArea, vec)
 
     else:
-        handled = FALSE
+        handled = False
 
     return handled
 
 def myAppEventHandlerQt4(myRenderArea, anyevent):
-    handled = TRUE
+    handled = True
 
-    if anyevent.type() == QEvent.MouseButtonPress:
-        if anyevent.button() == Qt.LeftButton:
+    if anyevent.type() == QtGui.QEvent.MouseButtonPress:
+        if anyevent.button() == QtGui.Qt.LeftButton:
             vec = myProjectPoint(myRenderArea, anyevent.x(), anyevent.y())
             myAddPoint(myRenderArea, vec)
-        elif anyevent.button() == Qt.MidButton:
+        elif anyevent.button() == QtGui.Qt.MidButton:
             myTicker.schedule()  # start spinning the camera
-        elif anyevent.button() == Qt.RightButton:
+        elif anyevent.button() == QtGui.Qt.RightButton:
             myClearPoints(myRenderArea)  # clear the point set
 
-    elif anyevent.type() == QEvent.MouseButtonRelease:
-        if anyevent.button() == Qt.MidButton:
+    elif anyevent.type() == QtGui.QEvent.MouseButtonRelease:
+        if anyevent.button() == QtGui.Qt.MidButton:
             myTicker.unschedule()  # stop spinning the camera
 
-    elif anyevent.type() == QEvent.MouseMove:
-        if anyevent.buttons() == Qt.LeftButton:
+    elif anyevent.type() == QtGui.QEvent.MouseMove:
+        if anyevent.buttons() == QtGui.Qt.LeftButton:
             vec = myProjectPoint(myRenderArea, anyevent.x(), anyevent.y())
             myAddPoint(myRenderArea, vec)
 
     else:
-        handled = FALSE
+        handled = False
 
     return handled
 
@@ -169,45 +177,45 @@ def myAppEventHandlerQt4(myRenderArea, anyevent):
 ###############################################################
 # CALLBACK WORKAROUND STARTS HERE
 
-DRAW = FALSE
+DRAW = False
 def myAppEventHandlerCoin(myRenderArea, anyevent):
     global DRAW
-    handled = TRUE
+    handled = True
     event = anyevent.getEvent()
     myRenderArea.draw = False
-    if isinstance(event, SoMouseButtonEvent):
-        if (event.getState() == SoMouseButtonEvent.DOWN):
+    if isinstance(event, coin.SoMouseButtonEvent):
+        if (event.getState() == coin.SoMouseButtonEvent.DOWN):
             if event.getButton() == event.BUTTON1:
                 pos = event.getPosition()
                 vec = myProjectPoint(myRenderArea, pos[0], pos[1], use_coin=True)
                 myAddPoint(myRenderArea, vec)
-                DRAW=TRUE
+                DRAW=True
             elif event.getButton() == event.BUTTON3:
                 myTicker.schedule()  # start spinning the camera
             elif event.getButton() == event.BUTTON2:
                 myClearPoints(myRenderArea)  # clear the point set
 
-        elif (event.getState() == SoMouseButtonEvent.UP):
+        elif (event.getState() == coin.SoMouseButtonEvent.UP):
             if event.getButton() == event.BUTTON1:
                 DRAW = False
             if event.getButton() == event.BUTTON3:
                 myTicker.unschedule()  # stop spinning the camera
 
-    elif isinstance(event, SoLocation2Event):
+    elif isinstance(event, coin.SoLocation2Event):
         if DRAW:
             pos = event.getPosition()
             vec = myProjectPoint(myRenderArea, pos[0], pos[1], use_coin=True)
             myAddPoint(myRenderArea, vec)
 
     else:
-        handled = FALSE
+        handled = False
 
     return handled
 
 # CALLBACK WORKAROUND ENDS HERE 
 ###############################################################
 
-def main():
+def executesetEventCB():
     global myTicker
     
     # Print out usage instructions
@@ -216,22 +224,17 @@ def main():
     print("\tMiddle: rotates points about the Y axis")
     print("\tRight: deletes all the points")
 
-    # Initialize Inventor and Qt
-    appWindow = SoQt.init(sys.argv[0])
-    if appWindow == None:
-        sys.exit(1)
-
     # Create and set up the root node
-    root = SoSeparator()
+    root = coin.SoSeparator()
 
     # Add a camera
-    myCamera = SoPerspectiveCamera()
+    myCamera = coin.SoPerspectiveCamera()
     root.addChild(myCamera)                 # child 0
    
     # Use the base color light model so we don't need to 
     # specify normals
-    myLightModel = SoLightModel()
-    myLightModel.model = SoLightModel.BASE_COLOR
+    myLightModel = coin.SoLightModel()
+    myLightModel.model = coin.SoLightModel.BASE_COLOR
     root.addChild(myLightModel)             # child 1
    
     # Set up the camera view volume
@@ -241,53 +244,18 @@ def main():
     myCamera.heightAngle = 22/7/3.0
    
     # Add a coordinate and point set
-    myCoord = SoCoordinate3()
-    myPointSet = SoPointSet()
+    myCoord = coin.SoCoordinate3()
+    myPointSet = coin.SoPointSet()
     root.addChild(myCoord)                  # child 2
     root.addChild(myPointSet)               # child 3
 
     # Timer sensor to tick off time while middle mouse is down
-    myTicker = SoTimerSensor(tickerCallback, myCamera)
+    myTicker = coin.SoTimerSensor(tickerCallback, myCamera)
     myTicker.setInterval(UPDATE_RATE)
 
-    # Create a render area for viewing the scene
-    myRenderArea = SoQtRenderArea(appWindow)
-    myRenderArea.setSceneGraph(root)
-    myRenderArea.setTitle("My Event Handler")
-
-
-###############################################################
-# as a workaround use a SoEventCallback:
-    if len(sys.argv) > 1 and sys.argv[1] == "coin":
-        myEventCallback = SoEventCallback()
-        root.addChild(myEventCallback)
-        myEventCallback.addEventCallback(SoEvent.getClassTypeId(), myAppEventHandlerCoin, myRenderArea)
 # end of workaround
-###############################################################
 
-###############################################################
-# TODO: this does not work with pyside
-# it will run once * is solved:
-# https://bugreports.qt.io/browse/PYSIDE-31?jql=project%20%3D%20PYSIDE%20AND%20resolution%20%3D%20Unresolved%20ORDER%20BY%20assignee%20ASC%2C%20priority%20DESC
-# 
-# CODE FOR The Inventor Mentor STARTS HERE  (part 2)
-#
-#    # Have render area send events to us instead of the scene 
-#    # graph.  We pass the render area as user data.
-    else:
-        if (SoQt.getVersionToolkitString().startswith('4') or
-            SoQt.getVersionToolkitString().startswith('5')):
-           myRenderArea.setEventCallback(myAppEventHandlerQt4, myRenderArea)
-        else:
-           myRenderArea.setEventCallback(myAppEventHandler, myRenderArea)
-#
-# CODE FOR The Inventor Mentor ENDS HERE
-###############################################################
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)
 
-    # Show our application window, and loop forever...
-    myRenderArea.show()
-    SoQt.show(appWindow)
-    SoQt.mainLoop()
-
-if __name__ == "__main__":
-    main()

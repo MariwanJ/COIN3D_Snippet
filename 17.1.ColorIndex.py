@@ -28,79 +28,81 @@
 #
 
 from __future__ import print_function
-import sys
 
-from OpenGL.GLUT import *
-from OpenGL.GL import *
-from OpenGL.GLX import *
+#warning : this will not work
+# import sys
 
-from pivy.coin import *
-from pivy.sogui import *
+# from OpenGL.GLUT import *
+# from OpenGL.GL import *
+# from OpenGL.GLX import *
 
-# window attribute list to create a color index visual.
-# This will create a double buffered color index window
-# with the maximum number of bits and a zbuffer.
-GLX_DOUBLEBUFFER=5
-GLX_BUFFER_SIZE=2
-GLX_DEPTH_SIZE=12
-attribList = (GLX_DOUBLEBUFFER, 
-              GLX_BUFFER_SIZE, 1, 
-              GLX_DEPTH_SIZE, 1, 
-              None)
+# from pivy.coin import *
+# from pivy.sogui import *
 
-# list of colors to load in the color map
-colors = ((.2, .2, .2), (.5, 1, .5), (.5, .5, 1))
+# # window attribute list to create a color index visual.
+# # This will create a double buffered color index window
+# # with the maximum number of bits and a zbuffer.
+# GLX_DOUBLEBUFFER=5
+# GLX_BUFFER_SIZE=2
+# GLX_DEPTH_SIZE=12
+# attribList = (GLX_DOUBLEBUFFER, 
+#               GLX_BUFFER_SIZE, 1, 
+#               GLX_DEPTH_SIZE, 1, 
+#               None)
 
-sceneBuffer = """#Inventor V2.0 ascii
+# # list of colors to load in the color map
+# colors = ((.2, .2, .2), (.5, 1, .5), (.5, .5, 1))
 
-Separator {
-   LightModel { model BASE_COLOR }
-   ColorIndex { index 1 }
-   Coordinate3 { point [ -1 -1 -1, -1 1 -1, 1 1 1, 1 -1 1] }
-   FaceSet {}
-   ColorIndex { index 2 }
-   Coordinate3 { point [ -1 -1 1, -1 1 1, 1 1 -1, 1 -1 -1] }
-   FaceSet {}
-}"""
+# sceneBuffer = """#Inventor V2.0 ascii
 
-def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])
+# Separator {
+#    LightModel { model BASE_COLOR }
+#    ColorIndex { index 1 }
+#    Coordinate3 { point [ -1 -1 -1, -1 1 -1, 1 1 1, 1 -1 1] }
+#    FaceSet {}
+#    ColorIndex { index 2 }
+#    Coordinate3 { point [ -1 -1 1, -1 1 1, 1 1 -1, 1 -1 -1] }
+#    FaceSet {}
+# }"""
+
+# def main():
+#     # Initialize Inventor and Qt
+#     myWindow = SoGui.init(sys.argv[0])
    
-    # read the scene graph in
-    input = SoInput()
-    input.setBuffer(sceneBuffer)
-    scene = SoDB.readAll(input) 
-    if not scene:
-        print("Couldn't read scene")
-        sys.exit(1)
+#     # read the scene graph in
+#     input = SoInput()
+#     input.setBuffer(sceneBuffer)
+#     scene = SoDB.readAll(input) 
+#     if not scene:
+#         print("Couldn't read scene")
+#         sys.exit(1)
 
-    # create the color index visual
-    vis = glXChooseVisual(QtDisplay(myWindow), 
-                          XScreenNumberOfScreen(QtScreen(myWindow)),
-                          attribList)
-    if not vis:
-        print("Couldn't create visual")
-        sys.exit(1)
+#     # create the color index visual
+#     vis = glXChooseVisual(QtDisplay(myWindow), 
+#                           XScreenNumberOfScreen(QtScreen(myWindow)),
+#                           attribList)
+#     if not vis:
+#         print("Couldn't create visual")
+#         sys.exit(1)
    
-    # allocate the viewer, set the scene, the visual and
-    # load the color map with the wanted colors.
-    #
-    # Color 0 will be used for the background (default) while
-    # color 1 and 2 are used by the objects.
-    #
-    myViewer = SoGuiExaminerViewer(myWindow)
-    myViewer.setNormalVisual(vis)
-    myViewer.setColorMap(0, 3, colors)
-    myViewer.setSceneGraph(scene)
-    myViewer.setTitle("Color Index Mode")
+#     # allocate the viewer, set the scene, the visual and
+#     # load the color map with the wanted colors.
+#     #
+#     # Color 0 will be used for the background (default) while
+#     # color 1 and 2 are used by the objects.
+#     #
+#     myViewer = SoGuiExaminerViewer(myWindow)
+#     myViewer.setNormalVisual(vis)
+#     myViewer.setColorMap(0, 3, colors)
+#     myViewer.setSceneGraph(scene)
+#     myViewer.setTitle("Color Index Mode")
    
-    # Show the viewer and loop forever...
-    myViewer.show()
-    XtRealizeWidget(myWindow)
-    SoGui.mainLoop()
+#     # Show the viewer and loop forever...
+#     myViewer.show()
+#     XtRealizeWidget(myWindow)
+#     SoGui.mainLoop()
 
-if __name__ == "__main__":
-    print("This example is not functional as it is GLX dependent!")
-    sys.exit(1)
-    main()
+# if __name__ == "__main__":
+#     print("This example is not functional as it is GLX dependent!")
+#     sys.exit(1)
+#     main()

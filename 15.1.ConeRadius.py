@@ -3,69 +3,62 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SOFTWARE.
 #
 
 ###
 # This is an example from the Inventor Mentor.
 # chapter 15, example 1.
 #
-# Uses an SoTranslate1Dragger to control the bottomRadius field 
-# of an SoCone.  The 'translation' field of the dragger is the 
-# input to an SoDecomposeVec3f engine. The engine extracts the
+# Uses an coin.SoTranslate1Dragger to control the bottomRadius field 
+# of an coin.SoCone.  The 'translation' field of the dragger is the 
+# input to an coin.SoDecomposeVec3f engine. The engine extracts the
 # x component from the translation. This extracted value is
 # connected to the bottomRadius field of the cone.
 #
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-import sys
+import os, sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+from PySide import QtGui, QtCore  # https://www.freecadweb.org/wiki/PySide
 
-from pivy.coin import *
-from pivy.sogui import *
-
-def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])  
-    if myWindow == None: sys.exit(1)     
-
-    root = SoSeparator()
+def ConeRadiusExec():
+    root = coin.SoSeparator()
 
     # Create myDragger with an initial translation of (1,0,0)
-    myDragger = SoTranslate1Dragger()
+    myDragger = coin.SoTranslate1Dragger()
     root.addChild(myDragger)
     myDragger.translation = (1,0,0)
 
-    # Place an SoCone above myDragger
-    myTransform = SoTransform()
-    myCone = SoCone()
+    # Place an coin.SoCone above myDragger
+    myTransform = coin.SoTransform()
+    myCone = coin.SoCone()
     root.addChild(myTransform)
     root.addChild(myCone)
     myTransform.translation = (0,3,0)
 
-    # SoDecomposeVec3f engine extracts myDragger's x-component
+    # coin.SoDecomposeVec3f engine extracts myDragger's x-component
     # The result is connected to myCone's bottomRadius.
-    myEngine = SoDecomposeVec3f()
+    myEngine = coin.SoDecomposeVec3f()
     myEngine.vector.connectFrom(myDragger.translation)
     myCone.bottomRadius.connectFrom(myEngine.x)
-
-    # Display them in a viewer
-    myViewer = SoGuiExaminerViewer(myWindow)
-    myViewer.setSceneGraph(root)
-    myViewer.setTitle("Dragger Edits Cone Radius")
-    myViewer.viewAll()
-    myViewer.show()
-
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)

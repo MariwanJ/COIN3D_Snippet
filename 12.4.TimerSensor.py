@@ -30,10 +30,18 @@
 # This example could also be done using engines.
 #
 
-import sys
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-from pivy.coin import *
-from pivy.sogui import *
+import os
+import sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+
 
 ###########################################################
 # CODE FOR The Inventor Mentor STARTS HERE
@@ -43,7 +51,7 @@ from pivy.sogui import *
 def rotatingSensorCallback(myRotation, sensor):
     # Rotate an object...
     currentRotation = myRotation.rotation.getValue()
-    currentRotation *= SbRotation(SbVec3f(0,0,1), 22/7/90.0)
+    currentRotation *= coin.SbRotation(coin.SbVec3f(0,0,1), 22/7/90.0)
     myRotation.rotation.setValue(currentRotation)
 
 # This function is called once every 5 seconds, and
@@ -58,47 +66,30 @@ def schedulingSensorCallback(rotatingSensor, sensor):
 # CODE FOR The Inventor Mentor ENDS HERE
 ###########################################################
 
-def main():
-    if len(sys.argv) != 2:
-        print("Usage: %s filename.iv" % (sys.argv[0]), file=sys.stderr)
-        sys.exit(1)
+def TimerSensorExcu():
+    root = coin.SoSeparator()
 
-    myWindow = SoGui.init(sys.argv[0])
-    if myWindow == None: sys.exit(1)
-
-    root = SoSeparator()
-   
 ###########################################################   
 # CODE FOR The Inventor Mentor STARTS HERE
 
-    myRotation = SoRotation()
+    myRotation = coin.SoRotation()
     root.addChild(myRotation)
 
-    rotatingSensor = SoTimerSensor(rotatingSensorCallback, myRotation)
+    rotatingSensor = coin.SoTimerSensor(rotatingSensorCallback, myRotation)
     rotatingSensor.setInterval(1.0) # scheduled once per second
     rotatingSensor.schedule()
 
-    schedulingSensor = SoTimerSensor(schedulingSensorCallback, rotatingSensor)
+    schedulingSensor = coin.SoTimerSensor(schedulingSensorCallback, rotatingSensor)
     schedulingSensor.setInterval(5.0) # once per 5 seconds
     schedulingSensor.schedule()
 
 # CODE FOR The Inventor Mentor ENDS HERE
 ###########################################################
 
-    inputFile = SoInput()
-    if inputFile.openFile(sys.argv[1]) == 0:
-        print("Could not open file %s" % (sys.argv[1]), sys.stderr)
-        sys.exit(1)
-        
-    root.addChild(SoDB.readAll(inputFile))
-
-    myViewer = SoGuiExaminerViewer(myWindow)
-    myViewer.setSceneGraph(root)
-    myViewer.setTitle("Two Timers")
-    myViewer.show()
-
-    SoGui.show(myWindow)  # Display main window
-    SoGui.mainLoop()        # Main Inventor event loop
-
-if __name__ == "__main__":
-    main()
+    inputFile = coin.SoInput()
+    inputFile.openFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\windmillTower.iv")
+    root.addChild(coin.SoDB.readAll(inputFile))
+    
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)

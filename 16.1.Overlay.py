@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SOFTWARE.
 #
 
 ###
@@ -22,16 +22,24 @@
 #
 # This example shows how to use the overlay planes with the
 # viewer components. By default color 0 is used for the
-# overlay planes background color (clear color), so we use
-# color 1 for the object. This example also shows how to
+# overlay planes background color (clear color), coin.so we use
+# color 1 for the object. This example alcoin.so shows how to
 # load the overlay color map with the wanted color.
 #
 
 from __future__ import print_function
-import sys
+#
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-from pivy.coin import *
-from pivy.sogui import *
+import os, sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+from PySide import QtGui, QtCore  # https://www.freecadweb.org/wiki/PySide
 
 overlayScene = """
 #Inventor V2.0 ascii
@@ -49,32 +57,22 @@ Separator {
    FaceSet {}
 }"""
 
-def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])  
-    if myWindow == None: sys.exit(1)     
+def OverlayExe():
 
     # read the scene graph in
-    input = SoInput()
+    input = coin.SoInput()
     input.setBuffer(overlayScene)
-    scene = SoDB.readAll(input)
+    scene = coin.SoDB.readAll(input)
     if scene == None:
         print("Couldn't read scene")
         sys.exit(1)
 
     # Allocate the viewer, set the overlay scene and
     # load the overlay color map with the wanted color.
-    color = SbColor(.5, 1, .5)
-    myViewer = SoGuiExaminerViewer(myWindow)
-    myViewer.setSceneGraph(SoCone())
-    myViewer.setOverlaySceneGraph(scene)
-    myViewer.setOverlayColorMap(1, 1, color)
-    myViewer.setTitle("Overlay Plane")
-   
-    # Show the viewer and loop forever
-    myViewer.show()
-    # QtRealizeWidget(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    color = coin.SbColor(.5, 1, .5)
+    myViewer = Gui.createViewer(2)
+    for i,v in enumerate(myViewer):
+        v.setSceneGraph(coin.SoCone())
+   # myViewer.setOverlaySceneGraph(scene)     #TODO FIXME : DOESN'T WORK !! 
+   # myViewer.setOverlayColorMap(1, 1, color)
+   # myViewer.setTitle("Overlay Plane")

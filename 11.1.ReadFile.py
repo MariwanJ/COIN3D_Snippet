@@ -27,23 +27,31 @@
 #
 
 from __future__ import print_function
-import sys
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-from pivy.coin import *
-from pivy.sogui import *
+import os
+import sys,math
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+
 
 #############################################################
 # CODE FOR The Inventor Mentor STARTS HERE
 
 def readFile(filename):
     # Open the input file
-    mySceneInput = SoInput()
+    mySceneInput = coin.SoInput()
     if not mySceneInput.openFile(filename):
         print("Cannot open file %s" % (filename), file=sys.stderr)
         return None
 
     # Read the whole file into the database
-    myGraph = SoDB.readAll(mySceneInput)
+    myGraph = coin.SoDB.readAll(mySceneInput)
     if myGraph == None:
         print("Problem reading file", file=sys.stderr)
         return None
@@ -55,23 +63,8 @@ def readFile(filename):
 #############################################################
 
 def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])
-
     # Read the file
-    scene = readFile("bookshelf.iv")
-
-    # Create a viewer
-    myViewer = SoGuiExaminerViewer(myWindow)
-
-    # attach and show viewer
-    myViewer.setSceneGraph(scene)
-    myViewer.setTitle("File Reader")
-    myViewer.show()
-    
-    # Loop forever
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    scene = readFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\bookshelf.iv")            # TODO: CHANGE ME IF YOU WANT!!
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(scene)

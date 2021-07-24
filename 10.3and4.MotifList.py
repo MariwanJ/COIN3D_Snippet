@@ -31,16 +31,21 @@
 #
 # This also demonstrates selecting objects from a Motif
 # list, and calling select/deselect functions on the
-# SoSelection node to change the selection. Use the Shift
+# coin.SoSelection node to change the selection. Use the Shift
 # key to extend the selection (i.e. pick more than one
 # item in the motif list.)
 #
 
 from __future__ import print_function
+import os
 import sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
-from pivy.coin import *
-from pivy.sogui import *
+
+#WARGNING: THIS CODE WILL NOT WORK AS THE CALLBACK IS DISABLED : TODO: FIXME:
+
 
 # Global data
 motifList = None
@@ -61,55 +66,56 @@ objectNames= (
 # CODE FOR The Inventor Mentor ENDS HERE
 ###############################################################
 
+#WARNING: This example will not work as it is based on Linux OS. TODO: FIXME: Mariwan
 
 
-# Create the object list widget
-def createList(display, selection):
-    global motifList
+# # Create the object list widget
+# def createList(display, selection):
+#     global motifList
     
-    args = [None, None, None, None]
+#     args = [None, None, None, None]
     
-    # Create a new shell window for the list
-    n = 0
-    XtSetArg(args[n], XmNtitle, "Selection")
-    n += 1
-    shell = XtAppCreateShell("example", "Inventor",
-                             topLevelShellWidgetClass, display, args, n)
+#     # Create a new shell window for the list
+#     n = 0
+#     XtSetArg(args[n], XmNtitle, "Selection")
+#     n += 1
+#     shell = XtAppCreateShell("example", "Inventor",
+#                              topLevelShellWidgetClass, display, args, n)
     
-###############################################################
-# CODE FOR The Inventor Mentor STARTS HERE  (part 3)
+# ###############################################################
+# # CODE FOR The Inventor Mentor STARTS HERE  (part 3)
 
-    # Create a table of object names
-    table = XmString[NUM_OBJECTS]
-    for i in range(NUM_OBJECTS):
-        table[i] = XmStringCreate(objectNames[i], 
-                                  XmSTRING_DEFAULT_CHARSET)
+#     # Create a table of object names
+#     table = XmString[NUM_OBJECTS]
+#     for i in range(NUM_OBJECTS):
+#         table[i] = XmStringCreate(objectNames[i], 
+#                                   XmSTRING_DEFAULT_CHARSET)
 
-    # Create the list widget
-    n = 0
-    XtSetArg(args[n], XmNitems, table)
-    n += 1
-    XtSetArg(args[n], XmNitemCount, NUM_OBJECTS)
-    n += 1
-    XtSetArg(args[n], XmNselectionPolicy, XmEXTENDED_SELECT)
-    n += 1
+#     # Create the list widget
+#     n = 0
+#     XtSetArg(args[n], XmNitems, table)
+#     n += 1
+#     XtSetArg(args[n], XmNitemCount, NUM_OBJECTS)
+#     n += 1
+#     XtSetArg(args[n], XmNselectionPolicy, XmEXTENDED_SELECT)
+#     n += 1
 
-    motifList = XmCreateScrolledList(shell, "funcList", args, n)
-    XtAddCallback(motifList, XmNextendedSelectionCallback,
-                  myListPickCB, selection)
+#     motifList = XmCreateScrolledList(shell, "funcList", args, n)
+#     XtAddCallback(motifList, XmNextendedSelectionCallback,
+#                   myListPickCB, selection)
    
-# CODE FOR The Inventor Mentor ENDS HERE
-###############################################################
+# # CODE FOR The Inventor Mentor ENDS HERE
+# ###############################################################
 
-    # Free the name table
-    for i in range(NUM_OBJECTS):
-        XmStringFree(table[i])
-    del table
+#     # Free the name table
+#     for i in range(NUM_OBJECTS):
+#         XmStringFree(table[i])
+#     del table
 
-    # Manage the list and return the shell
-    XtManageChild(motifList)
+#     # Manage the list and return the shell
+#     XtManageChild(motifList)
     
-    return shell
+#     return shell
 
 # This callback is invoked every time the user picks
 # an item in the Motif list.
@@ -118,8 +124,8 @@ def myListPickCB(Widget, selection, listData):
     
     # Remove the selection callbacks so that we don't get
     # called back while we are updating the selection list
-    selection.removeSelectionCallback(mySelectionCB, TRUE)
-    selection.removeDeselectionCallback(mySelectionCB, FALSE)
+    selection.removeSelectionCallback(mySelectionCB, True)
+    selection.removeDeselectionCallback(mySelectionCB, False)
 
 ###############################################################
 # CODE FOR The Inventor Mentor STARTS HERE  (part 4)
@@ -128,7 +134,7 @@ def myListPickCB(Widget, selection, listData):
     # and reselect
     selection.deselectAll()
 
-    # Update the SoSelection based on what is selected in
+    # Update the coin.SoSelection based on what is selected in
     # the motif list.  We do this by extracting the string
     # from the selected XmString, and searching for the 
     # object of that name.
@@ -141,12 +147,12 @@ def myListPickCB(Widget, selection, listData):
 ###############################################################
 
     # Add the selection callbacks again
-    selection.addSelectionCallback(mySelectionCB, TRUE)
-    selection.addDeselectionCallback(mySelectionCB, FALSE)
+    selection.addSelectionCallback(mySelectionCB, True)
+    selection.addDeselectionCallback(mySelectionCB, False)
 
 
 # This is called whenever an object is selected or deselected.
-# if userData is TRUE, then it's a selection else deselection.
+# if userData is True, then it's a selection else deselection.
 # (we set this convention up when we registered this callback).
 # The function updates the Motif list to reflect the current
 # selection.
@@ -193,13 +199,13 @@ def myScaleSelection(selection, sf):
             if xform != None: break
             n = selectedPath.getNodeFromTail(j)
 
-            if n.isOfType(SoCube.getClassTypeId()):
+            if n.isOfType(coin.SoCube.getClassTypeId()):
                 xform = cubeTransform
-            elif n.isOfType(SoCone.getClassTypeId()):
+            elif n.isOfType(coin.SoCone.getClassTypeId()):
                 xform = coneTransform
-            elif n.isOfType(SoSphere.getClassTypeId()):
+            elif n.isOfType(coin.SoSphere.getClassTypeId()):
                 xform = sphereTransform
-            elif n.isOfType(SoCylinder.getClassTypeId()):
+            elif n.isOfType(coin.SoCylinder.getClassTypeId()):
                 xform = cylTransform
 
         # Apply the scale
@@ -214,17 +220,17 @@ def myKeyPressCB(selection, eventCB):
     event = eventCB.getEvent()
 
     # check for the Up and Down arrow keys being pressed
-    if SoKeyboardEvent.isKeyPressEvent(event, SoKeyboardEvent.UP_ARROW):
+    if coin.SoKeyboardEvent.isKeyPressEvent(event, coin.SoKeyboardEvent.UP_ARROW):
         myScaleSelection(selection, 1.1)
         eventCB.setHandled()
-    elif SoKeyboardEvent.isKeyPressEvent(event, SoKeyboardEvent.DOWN_ARROW):
+    elif coin.SoKeyboardEvent.isKeyPressEvent(event, coin.SoKeyboardEvent.DOWN_ARROW):
         myScaleSelection(selection, 1.0/1.1)
         eventCB.setHandled()
 
 # CODE FOR The Inventor Mentor ENDS HERE
 ###############################################################
 
-def main():
+def MotifListExec():
     global cubeTransform, sphereTransform, coneTransform, cylTransform
 
     # Print out usage message
@@ -232,33 +238,29 @@ def main():
     print("<shift>Left mouse button - selects multiple objects")
     print("Up and Down arrows       - scale selected objects")
     
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])
-    if myWindow == None: sys.exit(1)
-
     # Create and set up the selection node
-    selectionRoot = SoSelection()
-    selectionRoot.policy = SoSelection.SHIFT
-    selectionRoot.addSelectionCallback(mySelectionCB, TRUE)
-    selectionRoot.addDeselectionCallback(mySelectionCB, FALSE)
-   
+    selectionRoot = coin.SoSelection()
+    selectionRoot.policy = coin.SoSelection.SHIFT
+    selectionRoot.addSelectionCallback(mySelectionCB, True)
+    selectionRoot.addDeselectionCallback(mySelectionCB, False)
+
     # Add a camera and some light
-    myCamera = SoPerspectiveCamera()
+    myCamera = coin.SoPerspectiveCamera()
     selectionRoot.addChild(myCamera)
-    selectionRoot.addChild(SoDirectionalLight())
+    selectionRoot.addChild(coin.SoDirectionalLight())
 
     # Add an event callback so we can receive key press events
-    myEventCB = SoEventCallback()
-    myEventCB.addEventCallback(SoKeyboardEvent.getClassTypeId(), 
+    myEventCB = coin.SoEventCallback()
+    myEventCB.addEventCallback(coin.SoKeyboardEvent.getClassTypeId(), 
                                myKeyPressCB, selectionRoot)
     selectionRoot.addChild(myEventCB)
 
     # Add some geometry to the scene
     # a red cube
-    cubeRoot = SoSeparator()
-    cubeMaterial = SoMaterial()
-    cubeTransform = SoTransform()
-    cube = SoCube()
+    cubeRoot = coin.SoSeparator()
+    cubeMaterial = coin.SoMaterial()
+    cubeTransform = coin.SoTransform()
+    cube = coin.SoCube()
     cubeRoot.addChild(cubeTransform)
     cubeRoot.addChild(cubeMaterial)
     cubeRoot.addChild(cube)
@@ -267,10 +269,10 @@ def main():
     selectionRoot.addChild(cubeRoot)
 
     # a blue sphere
-    sphereRoot = SoSeparator()
-    sphereMaterial = SoMaterial()
-    sphereTransform = SoTransform()
-    sphere = SoSphere()
+    sphereRoot = coin.SoSeparator()
+    sphereMaterial = coin.SoMaterial()
+    sphereTransform = coin.SoTransform()
+    sphere = coin.SoSphere()
     sphereRoot.addChild(sphereTransform)
     sphereRoot.addChild(sphereMaterial)
     sphereRoot.addChild(sphere)
@@ -279,10 +281,10 @@ def main():
     selectionRoot.addChild(sphereRoot)
 
     # a green cone
-    coneRoot = SoSeparator()
-    coneMaterial = SoMaterial()
-    coneTransform = SoTransform()
-    cone = SoCone()
+    coneRoot = coin.SoSeparator()
+    coneMaterial = coin.SoMaterial()
+    coneTransform = coin.SoTransform()
+    cone = coin.SoCone()
     coneRoot.addChild(coneTransform)
     coneRoot.addChild(coneMaterial)
     coneRoot.addChild(cone)
@@ -291,10 +293,10 @@ def main():
     selectionRoot.addChild(coneRoot)
 
     # a magenta cylinder
-    cylRoot = SoSeparator()
-    cylMaterial = SoMaterial()
-    cylTransform = SoTransform()
-    cyl = SoCylinder()
+    cylRoot = coin.SoSeparator()
+    cylMaterial = coin.SoMaterial()
+    cylTransform = coin.SoTransform()
+    cyl = coin.SoCylinder()
     cylRoot.addChild(cylTransform)
     cylRoot.addChild(cylMaterial)
     cylRoot.addChild(cyl)
@@ -314,27 +316,12 @@ def main():
 ###############################################################
 
     # Create a render area for viewing the scene
-    myRenderArea = SoGuiRenderArea(myWindow)
-    boxhra = SoBoxHighlightRenderAction()
-    myRenderArea.setGLRenderAction(boxhra)
-    myRenderArea.redrawOnSelectionChange(selectionRoot)
-    myRenderArea.setSceneGraph(selectionRoot)
-    myRenderArea.setTitle("Motif Selection List")
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(cylRoot)
+    sg.addChild(coneRoot)
+    sg.addChild(cubeRoot)
+    sg.addChild(sphereRoot)
+    
+    sg.addChild(selectionRoot)
 
-    # Make the camera see the whole scene
-    viewportRegion = myRenderArea.getViewportRegion()
-    myCamera.viewAll(selectionRoot, viewportRegion, 2.0)
-
-    # Create a Motif list for selecting objects without picking
-    objectList = createList(XtDisplay(myWindow), selectionRoot)
-
-    # Show our application window, and loop forever...
-    myRenderArea.show()
-    SoGui.show(myWindow)
-    SoGui.show(objectList)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    print("This example is not functional as it is GUI toolkit dependent!")
-    sys.exit(1)
-    main()

@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -27,10 +27,22 @@
 #
 
 from __future__ import print_function
-import math, sys
 
-from pivy.coin import *
-from pivy.sogui import *
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
+
+import os
+import sys,math
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+
+
+#WARNING: THIS WILL NOT WORKS!!! : TODO: FIXME:
+
 
 class UserData:
     sel = None
@@ -40,14 +52,14 @@ class UserData:
 ##############################################################
 ## CODE FOR The Inventor Mentor STARTS HERE  (part 1)
 
-# Truncate the pick path so a nodekit is selected
+# Truncate the pick path coin.So a nodekit is selected
 def pickFilterCB(void, pick):
     # See which child of selection got picked
     p = pick.getPath()
 
     for i in range(p.getLength() - 1, -1, -1):
         n = p.getNode(i)
-        if n.isOfType(SoShapeKit.getClassTypeId()):
+        if n.icoin.SofType(coin.SoShapeKit.getClassTypeId()):
             break
 
     # Copy the path down to the nodekit
@@ -59,13 +71,13 @@ def pickFilterCB(void, pick):
 
 # Create a sample scene graph
 def buildScene():
-    g = SoGroup()
+    g = coin.SoGroup()
     
     # Place a dozen shapes in circular formation
     for i in range(12):
-        k = SoShapeKit()
-        k.setPart("shape", SoCube())
-        xf = k.getPart("transform", TRUE)
+        k = coin.SoShapeKit()
+        k.setPart("shape", coin.SoCube())
+        xf = k.getPart("transform", True)
         xf.translation = (8*math.sin(i*22/7/6), 8*math.cos(i*22/7/6), 0.0)
         g.addChild(k)
 
@@ -74,12 +86,12 @@ def buildScene():
 # Update the material editor to reflect the selected object
 def selectCB(userData, path):
     kit = path.getTail()
-    kitMtl = kit.getPart("material", TRUE)
+    kitMtl = kit.getPart("material", True)
 
     # ud = userData
-    userData.ignore = TRUE
+    userData.ignore = True
     userData.editor.setMaterial(kitMtl)
-    userData.ignore = FALSE
+    userData.ignore = False
 
 # This is called when the user chooses a new material
 # in the material editor. This updates the material
@@ -87,7 +99,7 @@ def selectCB(userData, path):
 def mtlChangeCB(userData, mtl):
     # Our material change callback is invoked when the
     # user changes the material, and when we change it
-    # through a call to SoGuiMaterialEditor.setMaterial.
+    # through a call to coin.SoGuiMaterialEditor.setMaterial.
     # In this latter case, we ignore the callback invocation
     # ud = userData
 
@@ -101,32 +113,21 @@ def mtlChangeCB(userData, mtl):
     for i in range(sel.getNumSelected()):
         p = sel.getPath(i)
         kit = p.getTail()
-        kitMtl = kit.getPart("material", TRUE)
+        kitMtl = kit.getPart("material", True)
         kitMtl.copyFieldValues(mtl)
 
-def main():
-    # Initialization
-    mainWindow = SoGui.init(sys.argv[0])
+def PickFilterNodeKitExec():
     
     # Create our scene graph.
-    sel = SoSelection()
+    sel = coin.SoSelection()
     sel.addChild(buildScene())
-
-    # Create a viewer with a render action that displays highlights
-    viewer = SoGuiExaminerViewer(mainWindow)
-    viewer.setSceneGraph(sel)
-    boxhra = SoBoxHighlightRenderAction()
-    viewer.setGLRenderAction(boxhra)
-    viewer.redrawOnSelectionChange(sel)
-    viewer.setTitle("Select Node Kits")
-    viewer.show()
 
     # Create a material editor
     try:
-        ed = SoGuiMaterialEditor()
+        ed = coin.SoGuiMaterialEditor()
     except:
-        print("The SoGuiMaterialEditor node has not been implemented in the " + \
-              "SoGui bindings of Coin!")
+        print("The coin.SoGuiMaterialEditor node has not been implemented in the " + \
+              "coin.SoGui bindings of Coin!")
         sys.exit(1)
     ed.show()
 
@@ -134,15 +135,14 @@ def main():
     userData = UserData()
     userData.sel = sel
     userData.editor = ed
-    userData.ignore = FALSE
+    userData.ignore = False
    
     # Selection and material change callbacks
     ed.addMaterialChangedCallback(mtlChangeCB, userData)
     sel.setPickFilterCallback(pickFilterCB)
     sel.addSelectionCallback(selectCB, userData)
-   
-    SoGui.show(mainWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(sel)
+    

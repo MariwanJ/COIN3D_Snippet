@@ -28,10 +28,23 @@
 #
 
 from __future__ import print_function
-import sys
 
-from pivy.coin import *
-from pivy.sogui import *
+####################################################################
+#  Modified to be compatible with  FreeCAD   #
+#  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com  #
+####################################################################
+
+import os
+import sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+
+#WARNING: This doesn't work don't know how to fix it : TODO: FIXME:
+
+
+
 
 # Pick the topmost node beneath the selection node
 def pickFilterCB(void, pick):
@@ -40,7 +53,7 @@ def pickFilterCB(void, pick):
     
     for i in range(p.getLength() - 1):
         n = p.getNode(i)
-        if n.isOfType(SoSelection.getClassTypeId()):
+        if n.isOfType(coin.SoSelection.getClassTypeId()):
             break
 
     # Copy 2 nodes from the path:
@@ -49,48 +62,40 @@ def pickFilterCB(void, pick):
 
 def main():
     # Initialization
-    mainWindow = SoGui.init(sys.argv[0])
     
     # Open the data file
-    input = SoInput()
-    datafile = "parkbench.iv"
-    if not input.openFile(datafile):
-        print("Cannot open %s for reading." % (datafile), file=sys.stderr)
-        sys.exit(1)
+    input = coin.SoInput()
+    datafile = "E:\\TEMP \\fix some drawing\\Mentor_Freecad\\parkbench.iv"     #TODO: CHANGE PATH AND FILE NAME IF YOU WANT
+    input.openFile(datafile)
+
 
     # Read the input file
-    sep = SoSeparator()
-    sep.addChild(SoDB.readAll(input))
+    sep = coin.SoSeparator()
+    sep.addChild(coin.SoDB.readAll(input))
    
     # Create two selection roots - one will use the pick filter.
-    topLevelSel = SoSelection()
+    topLevelSel = coin.SoSelection()
     topLevelSel.addChild(sep)
     topLevelSel.setPickFilterCallback(pickFilterCB)
 
-    defaultSel = SoSelection()
+    defaultSel = coin.SoSelection()
     defaultSel.addChild(sep)
 
     # Create two viewers, one to show the pick filter for top level
     # selection, the other to show default selection.
-    viewer1 = SoGuiExaminerViewer(mainWindow)
+    viewer1 = Gui.ActiveDocument.ActiveView
     viewer1.setSceneGraph(topLevelSel)
-    boxhra1 = SoBoxHighlightRenderAction()
+    boxhra1 = coin.SoBoxHighlightRenderAction()
     viewer1.setGLRenderAction(boxhra1)
     viewer1.redrawOnSelectionChange(topLevelSel)
     viewer1.setTitle("Top Level Selection")
 
-    viewer2 = SoGuiExaminerViewer()
+    viewer2 = coin.SoGuiExaminerViewer()
     viewer2.setSceneGraph(defaultSel)
-    boxhra2 = SoBoxHighlightRenderAction()
+    boxhra2 = coin.SoBoxHighlightRenderAction()
     viewer2.setGLRenderAction(boxhra2)
     viewer2.redrawOnSelectionChange(defaultSel)
     viewer2.setTitle("Default Selection")
 
     viewer1.show()
     viewer2.show()
-   
-    SoGui.show(mainWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()

@@ -3,75 +3,64 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-###
-# This is an example from the Inventor Mentor,
-# chapter 12, example 3.
-#
-# Alarm sensor that raises a flag after 10 minutes
-#
-
+import os
 import sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
 
-from pivy.coin import *
-from pivy.sogui import *
 
 ###########################################################
 # CODE FOR The Inventor Mentor STARTS HERE
 
-def raiseFlagCallback(flagAngleXform, sensor):
-    # We know that flagAngleXform is an autocasted SoTransform node
+def raiseFlagCallback(flagAngleXform, senSor):
+    # We know that flagAngleXform is an autocasted coin.SoTransform node
     # Rotate flag by 90 degrees about the Z axis:
-    flagAngleXform.rotation.setValue(SbVec3f(0,0,1), 22/7/2)
+    flagAngleXform.rotation.setValue(coin.SbVec3f(0,0,1), 22/7/2)
 
 # CODE FOR The Inventor Mentor ENDS HERE
 ###########################################################
 
 
-def main():
-    myWindow = SoGui.init(sys.argv[0]) # pass the app name
-    if myWindow == None: sys.exit(1)
+def AlarmSensorEx():
 
 ###########################################################
 # CODE FOR The Inventor Mentor STARTS HERE
 
-    flagXform = SoTransform()
+    flagXform = coin.SoTransform()
 
     # Create an alarm that will call the flag-raising callback:
-    myAlarm = SoAlarmSensor(raiseFlagCallback, flagXform)
+    myAlarm = coin.SoAlarmSensor(raiseFlagCallback, flagXform)
     myAlarm.setTimeFromNow(12.0)  # 12 seconds
     myAlarm.schedule()
 
 # CODE FOR The Inventor Mentor ENDS HERE
 ###########################################################
 
-    root = SoSeparator()
+    root = coin.SoSeparator()
     root.addChild(flagXform)
-    myCone = SoCone()
+    myCone = coin.SoCone()
     myCone.bottomRadius = 0.1
     root.addChild(myCone)
-
-    myViewer = SoGuiExaminerViewer(myWindow)
-
-    # Put our scene in myViewer, change the title
-    myViewer.setSceneGraph(root)
-    myViewer.setTitle("Raise The Cone")
-    myViewer.show()
-
-    SoGui.show(myWindow)  # Display main window
-    SoGui.mainLoop()      # Main Inventor event loop
-
-if __name__ == "__main__":
-    main()
+    
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)

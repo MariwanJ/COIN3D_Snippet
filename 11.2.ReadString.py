@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SOFTWARE.
 #
 
 ###
@@ -24,17 +24,25 @@
 # Create a dodecahedron, made of an IndexedFaceSet.  
 #
 
-import sys
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
 
-from pivy.coin import *
-from pivy.sogui import *
+import os
+import sys,math
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+
 
 #############################################################
 # CODE FOR The Inventor Mentor STARTS HERE
 
 # Reads a dodecahedron from the following string: 
 # (Note: ANSI compilers automatically concatenate 
-# adjacent string literals together, so the compiler sees 
+# adjacent string literals together, coin.so the compiler sees 
 # this as one big string)
 #
 # this note can be happily igonored for python programs! --tamer ;)
@@ -89,30 +97,18 @@ dodecahedron = """Separator {
 # Routine to create a scene graph representing a dodecahedron
 def makeDodecahedron():
     # Read from the string.
-    input = SoInput()
+    input = coin.SoInput()
     input.setBuffer(dodecahedron)
 
-    result = SoDB.readAll(input)
+    result = coin.SoDB.readAll(input)
 
     return result
 
 # CODE FOR The Inventor Mentor ENDS HERE
 #############################################################
 
-def main():
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])
-    if myWindow == None: sys.exit(1)
-
+def ReadString():
     root = makeDodecahedron()
-
-    myViewer = SoGuiExaminerViewer(myWindow)
-    myViewer.setSceneGraph(root)
-    myViewer.setTitle("String Reader")
-    myViewer.show()
-
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)

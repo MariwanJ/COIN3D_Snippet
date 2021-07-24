@@ -3,17 +3,17 @@
 ###
 # Copyright (c) 2002-2007 Systems in Motion
 #
-# Permission to use, copy, modify, and distribute this software for any
+# Permission to use, copy, modify, and distribute this coin.Software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# THE coin.SoFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS coin.SoFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
 # MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
 # ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# WHATcoin.SoEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS coin.SoFTWARE.
 #
 
 ###
@@ -27,10 +27,18 @@
 #
 
 from __future__ import print_function
-import sys
 
-from pivy.coin import *
-from pivy.sogui import *
+####################################################################
+#        Modified to be compatible with  FreeCAD                   #
+#                                                                  #
+# Author : Mariwan Jalal  mariwan.jalal@gmail.com                  #
+####################################################################
+
+import os, sys
+import FreeCAD as App
+import FreeCADGui as Gui
+import pivy.coin as coin
+from PySide import QtGui, QtCore  # https://www.freecadweb.org/wiki/PySide
 
 #############################################################
 # CODE FOR The Inventor Mentor STARTS HERE  (part 2)
@@ -42,13 +50,13 @@ def myMousePressCB(userData, eventCB):
     event = eventCB.getEvent()
 
     # Check for mouse button being pressed
-    if SoMouseButtonEvent.isButtonPressEvent(event, SoMouseButtonEvent.ANY):
+    if coin.SoMouseButtonEvent.isButtonPressEvent(event, coin.SoMouseButtonEvent.ANY):
 
         # Toggle the gate that controls the duck motion
         if gate.enable.getValue():
-            gate.enable = FALSE
+            gate.enable = False
         else:
-            gate.enable = TRUE
+            gate.enable = True
 
         eventCB.setHandled()
 
@@ -56,41 +64,37 @@ def myMousePressCB(userData, eventCB):
 #############################################################
 
 
-def main():
+def GagteExecute():
     # Print out usage message
     print("Click the left mouse button to enable/disable the duck motion")
 
-    # Initialize Inventor and Qt
-    myWindow = SoGui.init(sys.argv[0])  
-    if myWindow == None: sys.exit(1)     
-
-    root = SoSeparator()
+    root = coin.SoSeparator()
 
     # Add a camera and light
-    myCamera = SoPerspectiveCamera()
+    myCamera = coin.SoPerspectiveCamera()
     myCamera.position = (0., -4., 8.0)
     myCamera.heightAngle = 22/7/2.5
     myCamera.nearDistance = 1.0
     myCamera.farDistance = 15.0
     root.addChild(myCamera)
-    root.addChild(SoDirectionalLight())
+    root.addChild(coin.SoDirectionalLight())
 
     # Rotate scene slightly to get better view
-    globalRotXYZ = SoRotationXYZ()
-    globalRotXYZ.axis = SoRotationXYZ.X
+    globalRotXYZ = coin.SoRotationXYZ()
+    globalRotXYZ.axis = coin.SoRotationXYZ.X
     globalRotXYZ.angle = 22/7/9
     root.addChild(globalRotXYZ)
 
     # Pond group
-    pond = SoSeparator()
+    pond = coin.SoSeparator()
     root.addChild(pond)
-    cylMaterial = SoMaterial()
+    cylMaterial = coin.SoMaterial()
     cylMaterial.diffuseColor = (0., 0.3, 0.8)
     pond.addChild(cylMaterial)
-    cylTranslation = SoTranslation()
+    cylTranslation = coin.SoTranslation()
     cylTranslation.translation = (0., -6.725, 0.)
     pond.addChild(cylTranslation)
-    myCylinder = SoCylinder()
+    myCylinder = coin.SoCylinder()
     myCylinder.radius = 4.0
     myCylinder.height = 0.5
     pond.addChild(myCylinder)
@@ -99,21 +103,21 @@ def main():
 # CODE FOR The Inventor Mentor STARTS HERE  (part 1)
 
     # Duck group
-    duck = SoSeparator()
+    duck = coin.SoSeparator()
     root.addChild(duck)
 
     # Read the duck object from a file and add to the group
-    myInput = SoInput()
-    if not myInput.openFile("duck.iv"):
+    myInput = coin.SoInput()
+    if not myInput.openFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\duck.iv"):     #TODO: FIXME: Chnage the path/file if you want
         sys.exit(1)
-    duckObject = SoDB.readAll(myInput)
+    duckObject = coin.SoDB.readAll(myInput)
     if duckObject == None:
         sys.exit(1)
 
     # Set up the duck transformations
-    duckRotXYZ = SoRotationXYZ()
+    duckRotXYZ = coin.SoRotationXYZ()
     duck.addChild(duckRotXYZ)
-    initialTransform = SoTransform()
+    initialTransform = coin.SoTransform()
     initialTransform.translation = (0., 0., 3.)
     initialTransform.scaleFactor = (6., 6., 6.)
     duck.addChild(initialTransform)
@@ -121,29 +125,20 @@ def main():
     duck.addChild(duckObject)
 
     # Update the rotation value if the gate is enabled.
-    myGate = SoGate(SoMFFloat.getClassTypeId())
-    myCounter = SoElapsedTime()
+    myGate = coin.SoGate(coin.SoMFFloat.getClassTypeId())
+    myCounter = coin.SoElapsedTime()
     myGate.input.connectFrom(myCounter.timeOut) 
-    duckRotXYZ.axis = SoRotationXYZ.Y  # rotate about Y axis
+    duckRotXYZ.axis = coin.SoRotationXYZ.Y  # rotate about Y axis
     duckRotXYZ.angle.connectFrom(myGate.output)
 
     # Add an event callback to catch mouse button presses.
     # Each button press will enable or disable the duck motion.
-    myEventCB = SoEventCallback()
-    myEventCB.addEventCallback(SoMouseButtonEvent.getClassTypeId(),
+    myEventCB = coin.SoEventCallback()
+    myEventCB.addEventCallback(coin.SoMouseButtonEvent.getClassTypeId(),
                                myMousePressCB, myGate)
     root.addChild(myEventCB)
 
-# CODE FOR The Inventor Mentor ENDS HERE
-#############################################################
-
-    myRenderArea = SoGuiRenderArea(myWindow)
-    myRenderArea.setSceneGraph(root)
-    myRenderArea.setTitle("Duck Pond")
-    myRenderArea.show()
-
-    SoGui.show(myWindow)
-    SoGui.mainLoop()
-
-if __name__ == "__main__":
-    main()
+    view = Gui.ActiveDocument.ActiveView
+    sg = view.getSceneGraph()
+    sg.addChild(root)
+    
