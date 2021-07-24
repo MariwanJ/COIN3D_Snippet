@@ -111,7 +111,7 @@ def makeObeliskFaceSet():
         obelisk.addChild(myCoords)
 
         # Define the FaceSet
-        myFaceSet = coinSoFaceSet()
+        myFaceSet = coin.SoFaceSet()
         myFaceSet.numVertices.setValues(0, 8, numvertices)
         obelisk.addChild(myFaceSet)
     return obelisk
