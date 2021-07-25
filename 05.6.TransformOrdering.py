@@ -61,7 +61,7 @@ def TransformOrdering():
     rightTranslation.translation = (1.0, 0.0, 0.0)
     myRotation.angle = 22/7/2   # 90 degrees
     myRotation.axis = coin.SoRotationXYZ.X
-    myScale.scaleFactor = (2., 1., 3.)
+    myScale.scaleFactor = (2., 1., 3.)                   #Hint:This line scale the object unciform which deform the drawing (Mariwan)
 
     # Add transforms to the scene.
     leftSep.addChild(leftTranslation)   # left graph

@@ -46,7 +46,7 @@ def TextureFunc():
     # Choose a texture.
     faceTexture = coin.SoTexture2()
     root.addChild(faceTexture)
-    faceTexture.filename = "sillyFace.rgb"
+    faceTexture.filename = "E:\\TEMP\\fix some drawing\\Mentor_Freecad\\sillyFace.rgb"           #TODO: FIXME: Change path
 
     # Make the diffuse color pure white
     myMaterial = coin.SoMaterial()

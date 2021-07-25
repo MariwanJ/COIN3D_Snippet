@@ -46,7 +46,7 @@ def TextureCoord():
     # Choose a texture
     brick = coin.SoTexture2()
     root.addChild(brick)
-    brick.filename = "brick.1.rgb"
+    brick.filename = "E:\\TEMP\\fix some drawing\\Mentor\\brick.1.rgb"     #TODO : FIXME : CHANGE PATH
 
     if IV_STRICT:
         # This is the preferred code for Inventor 2.1 
@@ -69,7 +69,7 @@ def TextureCoord():
         myVertexProperty.texCoord.set1Value(2, coin.SbVec2f(1, 1))
         myVertexProperty.texCoord.set1Value(3, coin.SbVec2f(0, 1))
 
-        # coin.SoTextureCoordinateBinding node is now obcoin.Solete--in Inventor 2.1,
+        # coin.SoTextureCoordinateBinding node is now obSolete--in Inventor 2.1,
         # texture coordinates will always be generated if none are 
         # provided.
         #
@@ -114,7 +114,7 @@ def TextureCoord():
         root.addChild(nBind)
         nBind.value = coin.SoNormalBinding.OVERALL
 
-        # coin.SoTextureCoordinateBinding node is now obcoin.Solete--in Inventor 2.1,
+        # coin.SoTextureCoordinateBinding node is now obSolete--in Inventor 2.1,
         # texture coordinates will always be generated if none are 
         # provided.
         #

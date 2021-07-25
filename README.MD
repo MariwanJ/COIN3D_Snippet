@@ -15,6 +15,6 @@ I hope you enjoy lerning COIN3D in FreeCAD.
 
 ### Some limitation:
 - There are files that cannot be modified to a suitable python file for FreeCAD. Due to the nature of the commands inside these files .. For example it has a specific Linux commands, or it has OpenGL library that is not existing in FreeCAD.
-- Be aware that there are some files loaded form your HDD (*.iv) extentions. These files are with hardcoded path. You need to change them .. Don't forget. There is alwasy a TODO: FIXME: text near to that line
+- Be aware that there are some files loaded form your HDD (*.iv) extensions. These files are with hardcoded path. You need to change them .. Don't forget. There is always a TODO: FIXME: text near to that line
 
 Mariwan Jalal
