@@ -36,12 +36,13 @@ import pivy.coin as coin
 
 def Examiner():
 
-    root = coin.SoSeparator()
-    myMaterial = coin.SoMaterial()
-    myMaterial.diffuseColor = (1.0, 0.0, 0.0)
-    root.addChild(myMaterial)
-    root.addChild(coin.SoCone())
-
+    # Read the geometry from a file and add to the scene
+    myInput = coin.SoInput()
+    if not myInput.openFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\dogDish.iv"):
+        sys.exit(1)
+    geomObject = coin.SoDB.readAll(myInput)
+    if geomObject == None:
+        sys.exit(1)
     view = Gui.ActiveDocument.ActiveView
     sg = view.getSceneGraph()
-    sg.addChild(root)
+    sg.addChild(geomObject)

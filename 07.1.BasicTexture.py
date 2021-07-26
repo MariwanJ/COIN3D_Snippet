@@ -41,9 +41,8 @@ def BasicTexture():
 
     # Choose a texture 
     rock = coin.SoTexture2()
-    root.addChild(rock)
     rock.filename = "E:\\TEMP\\fix some drawing\\Mentor_Freecad\\brick.1.rgb"   #TODO : FIXME : CHANGE THE PATH
-
+    root.addChild(rock)
     # Make a cube
     root.addChild(coin.SoCube())
 

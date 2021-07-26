@@ -62,5 +62,4 @@ def ExecuteRemoveCube():
    mySphere = coin.SoSphere()
    root.addChild(mySphere)
    mySphere.setName("MySphere")
-    
-   RemoveCube()
+

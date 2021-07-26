@@ -65,7 +65,7 @@ def Simple3DText():
     sphereSep.addChild(myTexture2)
     sphereSep.addChild(sphereComplexity)
     sphereSep.addChild(coin.SoSphere())
-    myTexture2.filename = "globe.rgb"
+    myTexture2.filename = "E:\\TEMP\\fix some drawing\\Mentor_Freecad\\globe.rgb"  #TODO: FIXME : CHANGE PATH
 
     # Add Text3 for AFRICA, transformed to proper location.
     africaSep = coin.SoSeparator()

@@ -44,13 +44,12 @@ import pivy.coin as coin
 def cameraChangedCB(viewerCamera, sensor):
     cameraPosition = viewerCamera.position.getValue()
     print("Camera position: (%g,%g,%g)" % (cameraPosition[0], cameraPosition[1],cameraPosition[2]))
-    
-    
-    
+
+
+
 def FieldSensorEx():
     inputFile = coin.SoInput()
     inputFile.openFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\luxo.vi")          #CHANGE ME  TODO: FIXME:
-    
     root = coin.SoDB.readAll(inputFile)
     view = Gui.ActiveDocument.ActiveView
     sg = view.getSceneGraph()
