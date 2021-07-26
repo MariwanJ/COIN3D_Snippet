@@ -22,8 +22,7 @@ https://github.com/coin3d/pivy/tree/master/examples/Mentor
 ### Limitations
 
 - There are files that **cannot** be modified to a suitable python file for FreeCAD due to having 3rd party dependencies or incorrect context. For example, you may see references to specific Linux commands or a dependency on an OpenGL library that doesn't exist in FreeCAD.
-- Be aware that there are some files loaded from your hard disk (`*.iv`) extensions because their paths are hardcoded. You'll need to modify them.
-- There is always a TODO: FIXME: text near to that line
+- Be aware that there are some files loaded from your hard disk (`*.iv`) extensions because their paths are hardcoded. You'll need to modify them. There is always a TODO: FIXME: text near to that line
 
 ### Examples
 
