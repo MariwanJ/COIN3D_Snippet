@@ -62,7 +62,7 @@ def readFile(filename):
 # CODE FOR The Inventor Mentor ENDS HERE
 #############################################################
 
-def main():
+def ReadFile():
     # Read the file
     scene = readFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\bookshelf.iv")            # TODO: CHANGE ME IF YOU WANT!!
     view = Gui.ActiveDocument.ActiveView

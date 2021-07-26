@@ -41,10 +41,6 @@ from PySide import QtGui, QtCore  # https://www.freecadweb.org/wiki/PySide
 
 
 def ElapsedTimeEx():
-    # Initialize Inventor and Qt
-    myWindow = coin.coin.SoGui.init(sys.argv[0])  
-    if myWindow == None: sys.exit(1)     
-
     root = coin.SoSeparator()
 
     # Add a camera and light
@@ -62,12 +58,12 @@ def ElapsedTimeEx():
     initialTransform = coin.SoTransform()
     initialTransform.translation = (-5., 0., 0.)
     initialTransform.scaleFactor = (10., 10., 10.)
-    initialTransform.rotation.setValue(SbVec3f(1,0,0), 22/7/2.)
+    initialTransform.rotation.setValue(coin.SbVec3f(1,0,0), 22/7/2.)
     root.addChild(initialTransform)
 
     # Read the figure object from a file and add to the scene
     myInput = coin.SoInput()
-    if not myInput.openFile("jumpyMan.iv"):
+    if not myInput.openFile("E:\\TEMP\\fix some drawing\\Mentor_Freecad\\jumpyMan.iv"):
         sys.exit (1)
     figureObject = coin.SoDB.readAll(myInput)
     if figureObject == None:
