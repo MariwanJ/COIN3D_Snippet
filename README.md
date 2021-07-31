@@ -4,10 +4,10 @@ A Collection of 3D drawing examples using Pivy/Coin3D within FreeCAD.
 
 ### Description
 
-**[FreeCAD](https://freecadweb.org)** is a free libre open source Parametric CAD/CAM
-**[Coin3D](https://github.com/coin3d/coin/)** (AKA 'Coin') is an OpenGL-based, 3D graphics library that has its roots in the Open Inventor 2.1 API, which Coin still is compatible with.
-**[Pivy](https://github.com/coin3d/pivy)** is a Python library for python bindings of Coin3D.
-**[Wiki] (https://wiki.freecadweb.org/Coin3d_snippets)** List of the examples with some descriptions
+**[FreeCAD](https://freecadweb.org)** is a free libre open source Parametric CAD/CAM<br>
+**[Coin3D](https://github.com/coin3d/coin/)** (AKA 'Coin') is an OpenGL-based, 3D graphics library that has its roots in the Open Inventor 2.1 API, which Coin still is compatible with.<br>
+**[Pivy](https://github.com/coin3d/pivy)** is a Python library for python bindings of Coin3D.<br>
+**[Wiki](https://wiki.freecadweb.org/Coin3d_snippets)** List of the examples with some descriptions<br>
 ### Purpose
 
 This repository's purpose is to show practical examples of how to use the Coin3D API in macros or within the FreeCAD console. The code has been modified to be suitable to run within FreeCAD (see [Limitations](#Limitations)).
