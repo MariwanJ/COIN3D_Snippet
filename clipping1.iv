@@ -1,0 +1,27 @@
+#Inventor V2.1 ascii
+
+
+DEF root Separator {
+
+  Separator {
+
+    ClipPlane {
+      plane 1 0 0  0
+      on TRUE
+
+    }
+    Cube {
+
+    }
+  }
+  Separator {
+
+    Translation {
+      translation -3 0 0
+
+    }
+    Cube {
+
+    }
+  }
+}

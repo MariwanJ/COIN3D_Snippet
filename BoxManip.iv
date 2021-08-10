@@ -1,0 +1,37 @@
+#Inventor V2.1 ascii
+
+
+DEF root Separator {
+
+  Separator {
+
+    ClipPlane {
+      plane 1 0 0  0
+      on TRUE
+
+    }
+    TabBoxManip {
+      translation 1.1830654 0.087529764 0.48225498
+      scaleFactor 0.96621025 0.96621025 1.4822549
+
+    }
+    Cube {
+
+    }
+  }
+  Separator {
+
+    Translation {
+      translation -3 0 0
+
+    }
+    TabBoxManip {
+      translation 0.4584617 -1.4059952 0.48225495
+      scaleFactor 1.0084715 0.57114369 1.4822549
+
+    }
+    Cube {
+
+    }
+  }
+}

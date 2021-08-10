@@ -1,0 +1,177 @@
+#Inventor V2.1 ascii
+
+
+DEF root Separator {
+
+  SpotLight {
+    location 6 12 2
+    direction 0 -1 0
+    dropOffRate 0.2
+    cutOffAngle 0.89999998
+
+  }
+  ShapeHints {
+    faceType UNKNOWN_FACE_TYPE
+
+  }
+  Texture2Transform {
+    scaleFactor 8 8
+
+  }
+  Texture2 {
+    filename ""
+
+  }
+  NormalBinding {
+    value PER_PART
+
+  }
+  Material {
+    diffuseColor 1 1 1
+    specularColor 1 1 1
+    shininess 0.40000001
+
+  }
+  DEF FloorPanel+0 Separator {
+
+    DEF FloorStrip+1 Separator {
+
+      DEF FloorBoard+2 Separator {
+
+        Normal {
+          vector 0 1 0
+
+        }
+        TextureCoordinate2 {
+          point [ 0 0,
+              0.5 0,
+              0.5 2,
+              0.5 4,
+              0.5 6,
+              0.5 8,
+              0 8,
+              0 6,
+              0 4,
+              0 2 ]
+
+        }
+        Coordinate3 {
+          point [ 0 0 0,
+              0.5 0 0,
+              0.5 0 -2,
+              0.5 0 -4,
+              0.5 0 -6,
+              0.5 0 -8,
+              0 0 -8,
+              0 0 -6,
+              0 0 -4,
+              0 0 -2 ]
+
+        }
+        FaceSet {
+          numVertices 10
+
+        }
+        BaseColor {
+          rgb 0.30000001 0.1 0
+
+        }
+        Translation {
+          translation 0.125 0 -0.333
+
+        }
+        Cylinder {
+          radius 0.041669998
+          height 0.0020000001
+          parts TOP
+
+        }
+        Translation {
+          translation 0.25 0 0
+
+        }
+        Cylinder {
+          radius 0.041669998
+          height 0.0020000001
+          parts TOP
+
+        }
+        Translation {
+          translation 0 0 -7.3330002
+
+        }
+        Cylinder {
+          radius 0.041669998
+          height 0.0020000001
+          parts TOP
+
+        }
+        Translation {
+          translation -0.25 0 0
+
+        }
+        Cylinder {
+          radius 0.041669998
+          height 0.0020000001
+          parts TOP
+
+        }
+      }
+      Translation {
+        translation 0 0 8.0299997
+
+      }
+      USE FloorBoard+2
+      Translation {
+        translation 0 0 8.04
+
+      }
+      USE FloorBoard+2
+    }
+    Translation {
+      translation 0.52999997 0 -0.87
+
+    }
+    USE FloorStrip+1
+    Translation {
+      translation 0.52999997 0 -2.3
+
+    }
+    USE FloorStrip+1
+    Translation {
+      translation 0.52999997 0 1.3
+
+    }
+    USE FloorStrip+1
+    Translation {
+      translation 0.52999997 0 1.1
+
+    }
+    USE FloorStrip+1
+    Translation {
+      translation 0.52999997 0 -0.87
+
+    }
+    USE FloorStrip+1
+    Translation {
+      translation 0.52999997 0 1.7
+
+    }
+    USE FloorStrip+1
+    Translation {
+      translation 0.52999997 0 -0.5
+
+    }
+    USE FloorStrip+1
+  }
+  Translation {
+    translation 4.2399998 0 0
+
+  }
+  USE FloorPanel+0
+  Translation {
+    translation 4.2399998 0 0
+
+  }
+  USE FloorPanel+0
+}

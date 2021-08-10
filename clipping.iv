@@ -1,0 +1,32 @@
+#Inventor V2.1 ascii
+
+
+DEF root Separator {
+
+  Separator {
+
+    Translation {
+      translation -6 0 0
+
+    }
+    DEF cbdragger+0 CenterballDragger {
+
+    }
+  }
+  TransformSeparator {
+
+    Transform {
+      translation 0 0 0 =
+      USE cbdragger+0      . center
+      rotation 0 0 1  0 =
+      USE cbdragger+0      . rotation
+
+    }
+    ClipPlane {
+
+    }
+  }
+  Sphere {
+
+  }
+}

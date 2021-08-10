@@ -1,0 +1,66 @@
+#Inventor V2.1 ascii
+
+
+DEF root Separator {
+
+  GeoOrigin {
+    geoCoords 40.77 -73.97 0
+    geoSystem "GD"
+
+  }
+  GeoSeparator {
+
+    Translation {
+      translation 0 0 30000
+
+    }
+    Text2 {
+      string "New York"
+
+    }
+  }
+  GeoSeparator {
+    geoCoords 34.11 -118.4 0
+
+    BaseColor {
+      rgb 1 0 0
+
+    }
+    Cube {
+      width 25000
+      height 25000
+      depth 25000
+
+    }
+    Translation {
+      translation 0 0 30000
+
+    }
+    Text2 {
+      string "Los Angeles"
+
+    }
+  }
+  GeoSeparator {
+    geoCoords 846889 4313850 0
+
+    BaseColor {
+      rgb 0 1 1
+
+    }
+    Cube {
+      width 25000
+      height 25000
+      depth 25000
+
+    }
+    Translation {
+      translation 0 0 30000
+
+    }
+    Text2 {
+      string "Washington"
+
+    }
+  }
+}
