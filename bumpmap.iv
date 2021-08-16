@@ -1,0 +1,13 @@
+#Inventor V2.1 ascii
+
+
+Separator {
+
+  BumpMap {
+    filename "bumpmap.jpg"
+
+  }
+  Sphere {
+
+  }
+}

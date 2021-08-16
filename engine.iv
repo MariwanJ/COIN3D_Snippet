@@ -1,0 +1,15 @@
+#Inventor V2.0 ascii
+
+    Separator {
+      RotationXYZ {
+	axis	Z
+	angle	  =
+	  ElapsedTime {
+	    speed 2.0
+	  }
+	  . timeOut
+      }
+      Cone {
+      }
+    }
+

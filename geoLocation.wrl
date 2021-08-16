@@ -1,0 +1,123 @@
+#VRML V1.0 ascii
+
+
+DEF root Separator {
+  renderCaching OFF
+  boundingBoxCaching OFF
+  renderCulling OFF
+  pickCulling OFF
+
+  GeoOrigin {
+    geoCoords 40.77 -73.97 0
+    geoSystem "GD"
+
+  }
+  GeoSeparator {
+    geoCoords 40.67 -73.94000000000001 0
+    geoSystem "GD"
+
+    BaseColor {
+      rgb 0 1 0
+
+    }
+    Translation {
+      translation 0 0 30000
+
+    }
+    Text2 {
+      string "New York"
+
+    }
+  }
+  GeoSeparator {
+    geoCoords 34.11 -118.4 0
+    geoSystem "GD"
+
+    BaseColor {
+      rgb 1 0 0
+
+    }
+    Translation {
+      translation 0 0 30000
+
+    }
+    Text2 {
+      string "Los Angeles"
+
+    }
+  }
+  GeoSeparator {
+    geoCoords 846889 4313850 0
+    geoSystem [ "UTM",
+        "Z17" ]
+
+    BaseColor {
+      rgb 0 1 1
+
+    }
+    Translation {
+      translation 0 0 30000
+
+    }
+    Text2 {
+      string "Washington"
+
+    }
+  }
+  GeoCoordinate {
+    point [ 32 -120 0,
+        32 -110 0,
+        32 -100 0,
+        32 -90 0,
+        32 -80 0,
+        32 -70 0,
+        34 -120 0,
+        34 -110 0,
+        34 -100 0,
+        34 -90 0,
+        34 -80 0,
+        34 -70 0,
+        36 -120 0,
+        36 -110 0,
+        36 -100 0,
+        36 -90 0,
+        36 -80 0,
+        36 -70 0,
+        38 -120 0,
+        38 -110 0,
+        38 -100 0,
+        38 -90 0,
+        38 -80 0,
+        38 -70 0,
+        40 -120 0,
+        40 -110 0,
+        40 -100 0,
+        40 -90 0,
+        40 -80 0,
+        40 -70 0,
+        42 -120 0,
+        42 -110 0,
+        42 -100 0,
+        42 -90 0,
+        42 -80 0,
+        42 -70 0 ]
+    geoSystem "GD"
+
+  }
+  DrawStyle {
+    style LINES
+
+  }
+  BaseColor {
+
+  }
+  ShapeHints {
+    vertexOrdering COUNTERCLOCKWISE
+
+  }
+  QuadMesh {
+    verticesPerColumn 6
+    verticesPerRow 6
+
+  }
+}
