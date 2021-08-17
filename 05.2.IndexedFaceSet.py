@@ -75,7 +75,7 @@ def makeStellatedDodecahedron():
 # (plus the end-of-face indicator for each face):
 #
 
-    Indicies = (
+    Indices = (
     1,  2,  3,  4, 5, So_END_FACE_INDEX,  # top face
 
     0,  1,  8,  7, 3, So_END_FACE_INDEX,  # 5 faces about top
@@ -117,10 +117,10 @@ def makeStellatedDodecahedron():
         # Define coordinates for vertices
         myVertexProperty.vertex.setValues(0, 12, vertexPositions)
 
-        # Define the IndexedFaceSet, with Indicies into
+        # Define the IndexedFaceSet, with Indices into
         # the vertices:
         myFaceSet = coin.SoIndexedFaceSet()
-        myFaceSet.coordIndex.setValues(0, 72, Indicies)
+        myFaceSet.coordIndex.setValues(0, 72, Indices)
 
         myFaceSet.vertexProperty = myVertexProperty
         result.addChild(myFaceSet)
@@ -139,10 +139,10 @@ def makeStellatedDodecahedron():
         myCoords.point.setValues(0, 12, vertexPositions)
         result.addChild(myCoords)
 
-        # Define the IndexedFaceSet, with Indicies into
+        # Define the IndexedFaceSet, with Indices into
         # the vertices:
         myFaceSet = coin.SoIndexedFaceSet()
-        myFaceSet.coordIndex.setValues(0, 72, Indicies)
+        myFaceSet.coordIndex.setValues(0, 72, Indices)
         result.addChild(myFaceSet)
     view = Gui.ActiveDocument.ActiveView
     sg = view.getSceneGraph()
