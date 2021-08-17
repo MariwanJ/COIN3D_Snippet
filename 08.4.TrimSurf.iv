@@ -1,0 +1,356 @@
+#Inventor V2.1 ascii
+
+
+DEF root Separator {
+
+  EventCallback {
+
+  }
+  Switch {
+    whichChild -3
+
+    Switch {
+      whichChild -3
+
+    }
+    Switch {
+      whichChild -3
+
+    }
+  }
+  Separator {
+
+    PickStyle {
+      style UNPICKABLE
+
+    }
+    Material {
+      diffuseColor 0.80000001 0.80000001 0.80000001 ~
+      transparency 0.5
+
+    }
+    DEF GroupOnTopSel SoFCSelectionRoot {
+      fields [ SFEnum renderCaching, SFEnum boundingBoxCaching, SFEnum renderCulling, SFEnum pickCulling, SFEnum selectionStyle ]
+      renderCaching OFF
+      boundingBoxCaching OFF
+      selectionStyle PassThrough
+
+    }
+    DEF GroupOnTopPreSel SoFCSelectionRoot {
+      fields [ SFEnum renderCaching, SFEnum boundingBoxCaching, SFEnum renderCulling, SFEnum pickCulling, SFEnum selectionStyle ]
+      renderCaching OFF
+      boundingBoxCaching OFF
+      selectionStyle PassThrough
+
+    }
+  }
+  DEF EditingRoot Separator {
+
+    DEF EditingTransform Transform {
+
+    }
+  }
+  SoSkipBoundingGroup {
+    fields [ SFEnum mode ]
+
+    SoShapeScale {
+      fields [ SFFloat active, SFFloat scaleFactor, SFNode callbackList, SFNode shape, SFNode scale, SFNode topSeparator ]
+      scaleFactor 1
+      shape NULL
+
+    }
+  }
+  Separator {
+
+    Rotation {
+      rotation 0 1 0  1.5714284
+
+    }
+    Separator {
+
+      Texture2 {
+        filename "diamondRug.rgb"
+
+      }
+      DEF _+0 Separator {
+
+        Complexity {
+          value 0.69999999
+
+        }
+        Coordinate3 {
+          point [ -4.5 -2 8,
+              -2 1 8,
+              2 -3 6,
+              5 -1 8,
+              -3 3 4,
+              0 -1 4,
+              1 -1 4,
+              3 2 4,
+              -5 -2 -2,
+              -2 -4 -2,
+              2 -1 -2,
+              5 0 -2,
+              -4.5 2 -6,
+              -2 -4 -5,
+              2 3 -5,
+              4.5 -2 -6 ]
+
+        }
+        ProfileCoordinate2 {
+          point [ 0 0,
+              1 0,
+              1 1,
+              0 1,
+              0.2 0.2,
+              0.2 0.69999999,
+              0.89999998 0.69999999,
+              0.89999998 0.2,
+              0.69999999 0,
+              0.40000001 0.80000001,
+              2.8025969e-045 8.7861414e-043,
+              2.2166045e+013 -8.4408614e-041 ]
+
+        }
+        NurbsProfile {
+          index [ 0, 1, 2, 3, 0 ]
+          knotVector [ 0, 0, 1, 2,
+              3, 4, 4 ]
+
+        }
+        NurbsProfile {
+          index [ 4, 5, 6, 7 ]
+          linkage START_NEW
+          knotVector [ 0, 0, 1, 2,
+              3, 3 ]
+
+        }
+        NurbsProfile {
+          index [ 7, 8, 9, 4 ]
+          linkage ADD_TO_CURRENT
+          knotVector [ 0, 0, 0, 0,
+              1, 1, 1, 1 ]
+
+        }
+        NurbsSurface {
+          numUControlPoints 4
+          numVControlPoints 4
+          uKnotVector [ 0, 0, 0, 0,
+              1, 1, 1, 1 ]
+          vKnotVector [ 0, 0, 0, 0,
+              1, 1, 1, 1 ]
+
+        }
+      }
+    }
+    Separator {
+
+      Translation {
+        translation -12 -5 -5
+
+      }
+      Scale {
+        scaleFactor 2 1 2
+
+      }
+      Separator {
+
+        SpotLight {
+          location 6 12 2
+          direction 0 -1 0
+          dropOffRate 0.2
+          cutOffAngle 0.89999998
+
+        }
+        ShapeHints {
+          faceType UNKNOWN_FACE_TYPE
+
+        }
+        Texture2Transform {
+          scaleFactor 8 8
+
+        }
+        Texture2 {
+          filename "oak.rgb"
+
+        }
+        NormalBinding {
+          value PER_PART
+
+        }
+        Material {
+          diffuseColor 1 1 1
+          specularColor 1 1 1
+          shininess 0.40000001
+
+        }
+        DEF FloorPanel+1 Separator {
+
+          DEF FloorStrip+2 Separator {
+
+            DEF FloorBoard+3 Separator {
+
+              Normal {
+                vector 0 1 0
+
+              }
+              TextureCoordinate2 {
+                point [ 0 0,
+                    0.5 0,
+                    0.5 2,
+                    0.5 4,
+                    0.5 6,
+                    0.5 8,
+                    0 8,
+                    0 6,
+                    0 4,
+                    0 2 ]
+
+              }
+              Coordinate3 {
+                point [ 0 0 0,
+                    0.5 0 0,
+                    0.5 0 -2,
+                    0.5 0 -4,
+                    0.5 0 -6,
+                    0.5 0 -8,
+                    0 0 -8,
+                    0 0 -6,
+                    0 0 -4,
+                    0 0 -2 ]
+
+              }
+              FaceSet {
+                numVertices 10
+
+              }
+              BaseColor {
+                rgb 0.30000001 0.1 0
+
+              }
+              Translation {
+                translation 0.125 0 -0.333
+
+              }
+              Cylinder {
+                radius 0.041669998
+                height 0.0020000001
+                parts TOP
+
+              }
+              Translation {
+                translation 0.25 0 0
+
+              }
+              Cylinder {
+                radius 0.041669998
+                height 0.0020000001
+                parts TOP
+
+              }
+              Translation {
+                translation 0 0 -7.3330002
+
+              }
+              Cylinder {
+                radius 0.041669998
+                height 0.0020000001
+                parts TOP
+
+              }
+              Translation {
+                translation -0.25 0 0
+
+              }
+              Cylinder {
+                radius 0.041669998
+                height 0.0020000001
+                parts TOP
+
+              }
+            }
+            Translation {
+              translation 0 0 8.0299997
+
+            }
+            USE FloorBoard+3
+            Translation {
+              translation 0 0 8.04
+
+            }
+            USE FloorBoard+3
+          }
+          Translation {
+            translation 0.52999997 0 -0.87
+
+          }
+          USE FloorStrip+2
+          Translation {
+            translation 0.52999997 0 -2.3
+
+          }
+          USE FloorStrip+2
+          Translation {
+            translation 0.52999997 0 1.3
+
+          }
+          USE FloorStrip+2
+          Translation {
+            translation 0.52999997 0 1.1
+
+          }
+          USE FloorStrip+2
+          Translation {
+            translation 0.52999997 0 -0.87
+
+          }
+          USE FloorStrip+2
+          Translation {
+            translation 0.52999997 0 1.7
+
+          }
+          USE FloorStrip+2
+          Translation {
+            translation 0.52999997 0 -0.5
+
+          }
+          USE FloorStrip+2
+        }
+        Translation {
+          translation 4.2399998 0 0
+
+        }
+        USE FloorPanel+1
+        Translation {
+          translation 4.2399998 0 0
+
+        }
+        USE FloorPanel+1
+      }
+    }
+    Separator {
+
+      Material {
+        transparency 0.30000001
+
+      }
+      LightModel {
+        model BASE_COLOR
+
+      }
+      BaseColor {
+        rgb 0.20999999 0.15000001 0.090000004
+
+      }
+      Translation {
+        translation 0 -4.9000001 0
+
+      }
+      Scale {
+        scaleFactor 1 0 1
+
+      }
+      USE _+0
+    }
+  }
+}
