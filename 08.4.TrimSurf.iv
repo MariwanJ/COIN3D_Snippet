@@ -6,18 +6,6 @@ DEF root Separator {
   EventCallback {
 
   }
-  Switch {
-    whichChild -3
-
-    Switch {
-      whichChild -3
-
-    }
-    Switch {
-      whichChild -3
-
-    }
-  }
   Separator {
 
     PickStyle {
@@ -29,34 +17,10 @@ DEF root Separator {
       transparency 0.5
 
     }
-    DEF GroupOnTopSel SoFCSelectionRoot {
-      fields [ SFEnum renderCaching, SFEnum boundingBoxCaching, SFEnum renderCulling, SFEnum pickCulling, SFEnum selectionStyle ]
-      renderCaching OFF
-      boundingBoxCaching OFF
-      selectionStyle PassThrough
-
-    }
-    DEF GroupOnTopPreSel SoFCSelectionRoot {
-      fields [ SFEnum renderCaching, SFEnum boundingBoxCaching, SFEnum renderCulling, SFEnum pickCulling, SFEnum selectionStyle ]
-      renderCaching OFF
-      boundingBoxCaching OFF
-      selectionStyle PassThrough
-
-    }
   }
   DEF EditingRoot Separator {
 
     DEF EditingTransform Transform {
-
-    }
-  }
-  SoSkipBoundingGroup {
-    fields [ SFEnum mode ]
-
-    SoShapeScale {
-      fields [ SFFloat active, SFFloat scaleFactor, SFNode callbackList, SFNode shape, SFNode scale, SFNode topSeparator ]
-      scaleFactor 1
-      shape NULL
 
     }
   }
